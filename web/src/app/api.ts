@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ChatResponse, HistoryItem, MatchedScheme, MatchResponse, Profile, SavedScheme } from './models';
+import { environment } from '../environments/environment';
 
 /** Talks to the Spring Boot API only — never directly to the GenAI service. */
 @Injectable({ providedIn: 'root' })
 export class Api {
   private readonly http = inject(HttpClient);
-  private readonly base = 'http://localhost:8080/api';
+  private readonly base = environment.apiBase;
 
   match(profile: Profile, lang = 'en', topK = 6): Observable<MatchResponse> {
     return this.http.post<MatchResponse>(`${this.base}/match`, { profile, topK, lang });

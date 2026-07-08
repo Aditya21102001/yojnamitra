@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse } from './models';
+import { environment } from '../environments/environment';
 
 const TOKEN_KEY = 'ym_token';
 const USER_KEY = 'ym_user';
@@ -10,7 +11,7 @@ const USER_KEY = 'ym_user';
 @Injectable({ providedIn: 'root' })
 export class Auth {
   private readonly http = inject(HttpClient);
-  private readonly base = 'http://localhost:8080/api/auth';
+  private readonly base = `${environment.apiBase}/auth`;
 
   private readonly _token = signal<string | null>(localStorage.getItem(TOKEN_KEY));
   private readonly _username = signal<string | null>(localStorage.getItem(USER_KEY));

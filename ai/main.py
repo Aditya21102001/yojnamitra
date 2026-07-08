@@ -15,7 +15,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-import ollama_client
+import providers
 import store
 from models import (
     ChatRequest,
@@ -89,7 +89,7 @@ def health() -> dict[str, Any]:
     return {
         "status": "ok",
         "seeded": store.is_seeded(),
-        "ollama": ollama_client.health(),
+        "providers": providers.health(),
     }
 
 
@@ -109,7 +109,7 @@ def match(req: MatchRequest) -> MatchResponse:
     query = req.profile.to_query()
     try:
         candidates = store.search(query, req.top_k)
-    except ollama_client.OllamaError as exc:
+    except providers.ProviderError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     if not candidates:
@@ -117,9 +117,9 @@ def match(req: MatchRequest) -> MatchResponse:
 
     # Ask the LLM to reason about eligibility for all candidates in one call.
     try:
-        raw = ollama_client.generate_json(_reason_prompt(query, candidates, req.lang), system=_SYSTEM)
+        raw = providers.generate_json(_reason_prompt(query, candidates, req.lang), system=_SYSTEM)
         verdicts = {r["id"]: r for r in raw.get("results", []) if "id" in r}
-    except ollama_client.OllamaError:
+    except providers.ProviderError:
         verdicts = {}  # degrade gracefully to retrieval-only results
 
     hi = req.lang == "hi"
@@ -181,7 +181,7 @@ def chat(req: ChatRequest) -> ChatResponse:
         system += " Answer in simple Hindi (Devanagari script)."
     prompt = f"{context}\n\nQuestion: {req.question}\n\nAnswer:"
     try:
-        answer = ollama_client.generate(prompt, system=system)
-    except ollama_client.OllamaError as exc:
+        answer = providers.generate(prompt, system=system)
+    except providers.ProviderError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     return ChatResponse(scheme_id=req.scheme_id, answer=answer)

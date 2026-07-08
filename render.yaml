@@ -1,37 +1,43 @@
-# Render blueprint for YojanaMitra. See DEPLOY.md for the LLM-hosting caveat.
+# Render blueprint for YojanaMitra (Groq LLM + Jina embeddings + Neon/Render Postgres).
+# See DEPLOY.md for the step-by-step. Values marked `sync: false` are set in the
+# Render dashboard (secrets / cross-service URLs known only after first deploy).
 services:
-  - type: web
-    name: yojanamitra-api
-    runtime: docker
-    dockerfilePath: ./api/Dockerfile
-    dockerContext: ./api
-    envVars:
-      - key: DB_ENGINE
-        value: postgres
-      - key: DB_HOST
-        fromDatabase: { name: yojanamitra-db, property: host }
-      - key: DB_PORT
-        fromDatabase: { name: yojanamitra-db, property: port }
-      - key: DB_NAME
-        fromDatabase: { name: yojanamitra-db, property: database }
-      - key: DB_USER
-        fromDatabase: { name: yojanamitra-db, property: user }
-      - key: DB_PASSWORD
-        fromDatabase: { name: yojanamitra-db, property: password }
-      - key: YOJANAMITRA_JWT_SECRET
-        generateValue: true
-      - key: YOJANAMITRA_AI_BASE_URL
-        sync: false            # set to your deployed GenAI service URL
-
+  # ---- GenAI service (Python/FastAPI) — Groq + Jina, no local model ----
   - type: web
     name: yojanamitra-ai
     runtime: docker
     dockerfilePath: ./ai/Dockerfile
     dockerContext: ./ai
+    plan: free
     envVars:
-      - key: OLLAMA_HOST
-        sync: false            # set to your Ollama host (free tiers can't run Ollama)
+      - key: LLM_PROVIDER
+        value: groq
+      - key: EMBED_PROVIDER
+        value: jina
+      - key: GROQ_API_KEY
+        sync: false            # from console.groq.com (free)
+      - key: JINA_API_KEY
+        sync: false            # from jina.ai (free)
 
+  # ---- Spring Boot API / gateway ----
+  - type: web
+    name: yojanamitra-api
+    runtime: docker
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: { name: yojanamitra-db, property: connectionString }
+      - key: YOJANAMITRA_JWT_SECRET
+        generateValue: true
+      - key: YOJANAMITRA_AI_BASE_URL
+        sync: false            # the yojanamitra-ai service URL (after it deploys)
+      - key: YOJANAMITRA_CORS_ALLOWED_ORIGINS
+        sync: false            # the yojanamitra-web URL (after it deploys)
+
+  # ---- Angular web (static) ----
+  # Set apiBase in web/src/environments/environment.prod.ts to the API URL first.
   - type: web
     name: yojanamitra-web
     runtime: static

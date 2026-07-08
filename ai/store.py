@@ -12,7 +12,7 @@ import math
 from pathlib import Path
 from typing import Any
 
-import ollama_client
+import providers
 
 _BASE = Path(__file__).parent
 _INDEX_FILE = _BASE / "data" / "index.json"
@@ -42,7 +42,7 @@ def build_index() -> int:
     global _cache
     schemes = load_schemes()
     entries = [
-        {"id": s["id"], "vector": ollama_client.embed(_index_text(s)), "scheme": s}
+        {"id": s["id"], "vector": providers.embed(_index_text(s)), "scheme": s}
         for s in schemes
     ]
     with open(_INDEX_FILE, "w", encoding="utf-8") as fh:
@@ -82,7 +82,7 @@ def _cosine(a: list[float], b: list[float]) -> float:
 def search(query: str, top_k: int) -> list[dict[str, Any]]:
     """Return the top_k schemes for a query, each with a `score` in [0, 1]."""
     ensure_seeded()
-    qv = ollama_client.embed(query)
+    qv = providers.embed(query)
     scored: list[tuple[float, dict[str, Any]]] = []
     for entry in _load_cache():
         sim = _cosine(qv, entry["vector"])

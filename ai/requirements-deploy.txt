@@ -1,0 +1,4 @@
+# Extra deps for the cloud deploy path (Groq LLM + fastembed embeddings).
+# Local dev uses Ollama and only needs requirements.txt.
+-r requirements.txt
+fastembed==0.5.1
