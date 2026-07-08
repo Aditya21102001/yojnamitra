@@ -2,5 +2,5 @@
 // origin before deploying the web app (e.g. https://yojanamitra-api.onrender.com/api).
 export const environment = {
   production: true,
-  apiBase: 'https://REPLACE-WITH-YOUR-API.onrender.com/api',
+  apiBase: 'https://yojnamitra.onrender.com/api',
 };
