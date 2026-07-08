@@ -37,7 +37,7 @@ const DICT: Record<string, { en: string; hi: string }> = {
   'form.selectCategory': { en: 'Select category', hi: 'श्रेणी चुनें' },
   'form.preferNot': { en: 'Prefer not to say', hi: 'नहीं बताना चाहते' },
 
-  'status.matching': { en: 'Reasoning about your eligibility on a local model — this takes a few seconds.', hi: 'एक लोकल मॉडल पर आपकी पात्रता का विश्लेषण हो रहा है — इसमें कुछ सेकंड लगते हैं।' },
+  'status.matching': { en: 'Reasoning about your eligibility — this can take a few seconds.', hi: 'आपकी पात्रता का विश्लेषण हो रहा है — इसमें कुछ सेकंड लग सकते हैं।' },
   'status.none': { en: 'No matching schemes found. Try adding more detail above.', hi: 'कोई मेल खाती योजना नहीं मिली। ऊपर अधिक जानकारी जोड़कर देखें।' },
   'results.heading': { en: 'schemes for you', hi: 'आपके लिए योजनाएँ' },
   'results.saveHint': { en: 'Log in to save schemes to your dashboard', hi: 'योजनाएँ सहेजने के लिए लॉग इन करें' },
@@ -61,8 +61,8 @@ const DICT: Record<string, { en: string; hi: string }> = {
   'toast.saveError': { en: 'Could not save — try again', hi: 'सहेजा नहीं जा सका — पुनः प्रयास करें' },
 
   'footer.note': {
-    en: 'Informational matches based on a curated dataset — always confirm on the official portal. 100% open-source · runs on a local model.',
-    hi: 'यह जानकारी एक क्यूरेटेड डेटासेट पर आधारित है — कृपया आधिकारिक पोर्टल पर पुष्टि करें। 100% ओपन-सोर्स · लोकल मॉडल पर चलता है।',
+    en: 'Informational matches based on a curated dataset — always confirm on the official portal. 100% open-source · powered by open LLMs.',
+    hi: 'यह जानकारी एक क्यूरेटेड डेटासेट पर आधारित है — कृपया आधिकारिक पोर्टल पर पुष्टि करें। 100% ओपन-सोर्स · ओपन LLM द्वारा संचालित।',
   },
 };
 
