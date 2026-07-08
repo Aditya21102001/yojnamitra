@@ -1,0 +1,49 @@
+<main class="container">
+  <h1 class="dash-title">Your dashboard</h1>
+  <p class="muted">Saved schemes and recent searches for <strong>{{ auth.username() }}</strong>.</p>
+
+  <section>
+    <h2 class="dash-h2">⭐ Saved schemes</h2>
+    @if (loading()) {
+      @for (i of [1, 2]; track i) {
+        <div class="card skeleton-card">
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line"></div>
+        </div>
+      }
+    } @else if (saved().length === 0) {
+      <div class="status">No saved schemes yet. Run a <a routerLink="/">match</a> and tap ☆ Save on any result.</div>
+    } @else {
+      @for (s of saved(); track s.id) {
+        <article class="card saved">
+          <div class="saved__head">
+            <span class="badge badge--{{ s.verdict }}">{{ s.verdict }}</span>
+            <span class="chip">{{ s.category }}</span>
+          </div>
+          <h3>{{ s.name }}</h3>
+          <p class="reason">{{ s.reason }}</p>
+          <div class="saved__actions">
+            <a class="btn--ghost" [href]="s.applyUrl" target="_blank" rel="noopener">Official site ↗</a>
+            <button class="btn--ghost" type="button" (click)="remove(s)">Remove</button>
+          </div>
+        </article>
+      }
+    }
+  </section>
+
+  <section class="history">
+    <h2 class="dash-h2">🕘 Recent searches</h2>
+    @if (history().length === 0) {
+      <p class="muted">No searches yet.</p>
+    } @else {
+      <ul class="history-list">
+        @for (h of history(); track h.id) {
+          <li>
+            <span class="history-q">{{ h.querySummary || '(no details given)' }}</span>
+            <span class="history-meta">{{ h.schemeCount }} match{{ h.schemeCount === 1 ? '' : 'es' }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</main>

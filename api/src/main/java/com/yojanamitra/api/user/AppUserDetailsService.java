@@ -1,0 +1,28 @@
+package com.yojanamitra.api.user;
+
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+/** Bridges our AppUser entity to Spring Security. */
+@Service
+public class AppUserDetailsService implements UserDetailsService {
+
+    private final AppUserRepository users;
+
+    public AppUserDetailsService(AppUserRepository users) {
+        this.users = users;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AppUser user = users.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No user: " + username));
+        return User.withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities("USER")
+                .build();
+    }
+}

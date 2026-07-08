@@ -1,0 +1,22 @@
+# Optional Postgres for the API (Phase 3). Start with:  docker compose up -d
+# then run the API with DB_ENGINE=postgres.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: yojanamitra-postgres
+    environment:
+      POSTGRES_DB: yojanamitra
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d yojanamitra"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

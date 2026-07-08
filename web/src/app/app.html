@@ -1,0 +1,24 @@
+<nav class="navbar">
+  <a class="navbar__brand" routerLink="/">🏛️ YojanaMitra</a>
+  <div class="navbar__links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ i18n.t('nav.find') }}</a>
+    @if (auth.isLoggedIn()) {
+      <a routerLink="/dashboard" routerLinkActive="active">{{ i18n.t('nav.dashboard') }}</a>
+      <span class="navbar__user">{{ i18n.t('nav.hi') }}, {{ auth.username() }}</span>
+      <button class="navbar__logout" type="button" (click)="logout()">{{ i18n.t('nav.logout') }}</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">{{ i18n.t('nav.login') }}</a>
+      <a routerLink="/register" routerLinkActive="active" class="navbar__cta">{{ i18n.t('nav.signup') }}</a>
+    }
+    <button class="navbar__lang" type="button" (click)="i18n.toggle()"
+      [title]="i18n.lang() === 'en' ? 'हिंदी में देखें' : 'View in English'">
+      {{ i18n.lang() === 'en' ? 'हिंदी' : 'EN' }}
+    </button>
+  </div>
+</nav>
+
+<router-outlet />
+
+@if (toast.message(); as m) {
+  <div class="toast">{{ m }}</div>
+}

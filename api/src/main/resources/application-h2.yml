@@ -1,0 +1,11 @@
+# Default datasource: in-memory H2 (zero-config). Active when DB_ENGINE=h2 (default).
+spring:
+  datasource:
+    url: jdbc:h2:mem:yojanamitra;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: true          # http://localhost:8080/h2-console
+      path: /h2-console

@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: yojanamitra-api
+  # DB_ENGINE selects the datasource profile: "h2" (default) or "postgres".
+  profiles:
+    active: ${DB_ENGINE:h2}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate.format_sql: true
+
+# Application config
+yojanamitra:
+  ai:
+    base-url: http://localhost:8000
+  jwt:
+    # Dev secret — override with the YOJANAMITRA_JWT_SECRET env var in production.
+    secret: ${YOJANAMITRA_JWT_SECRET:change-me-dev-secret-please-use-a-long-random-value-32b+}
+    expiration-ms: 86400000   # 24 hours
+
+logging:
+  level:
+    com.yojanamitra: INFO

@@ -1,0 +1,141 @@
+<header class="hero">
+  <div class="hero__inner">
+    <h1>{{ i18n.t('hero.title') }}</h1>
+    <p>{{ i18n.t('hero.sub') }}</p>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <h2 class="section-title">{{ i18n.t('form.title') }}</h2>
+    <p class="muted">{{ i18n.t('form.subtitle') }}</p>
+
+    <form (ngSubmit)="submit()">
+      <div class="grid">
+        <label>
+          <span>{{ i18n.t('form.age') }}</span>
+          <input type="number" name="age" [(ngModel)]="form.age" min="0" max="120" placeholder="e.g. 26" />
+        </label>
+        <label>
+          <span>{{ i18n.t('form.gender') }}</span>
+          <select name="gender" [(ngModel)]="form.gender">
+            <option value="">{{ i18n.t('form.preferNot') }}</option>
+            @for (g of genders; track g) { <option [value]="g">{{ g | titlecase }}</option> }
+          </select>
+        </label>
+        <label>
+          <span>{{ i18n.t('form.state') }}</span>
+          <select name="state" [(ngModel)]="form.state">
+            <option value="">{{ i18n.t('form.selectState') }}</option>
+            @for (s of states; track s) { <option [value]="s">{{ s }}</option> }
+          </select>
+        </label>
+        <label>
+          <span>{{ i18n.t('form.category') }}</span>
+          <select name="category" [(ngModel)]="form.category">
+            <option value="">{{ i18n.t('form.selectCategory') }}</option>
+            @for (c of categories; track c) { <option [value]="c">{{ c }}</option> }
+          </select>
+        </label>
+        <label>
+          <span>{{ i18n.t('form.occupation') }}</span>
+          <input type="text" name="occupation" [(ngModel)]="form.occupation" placeholder="e.g. small farmer, student" />
+        </label>
+        <label>
+          <span>{{ i18n.t('form.income') }}</span>
+          <input type="number" name="annualIncome" [(ngModel)]="form.annualIncome" min="0" placeholder="e.g. 90000" />
+        </label>
+      </div>
+
+      <label class="full">
+        <span>{{ i18n.t('form.about') }}</span>
+        <textarea name="description" [(ngModel)]="form.description" rows="2"
+          placeholder="e.g. I want to start a small tailoring business and need a collateral-free loan"></textarea>
+      </label>
+
+      <button type="submit" class="btn btn--block" [disabled]="loading()">
+        @if (loading()) { {{ i18n.t('form.matching') }} } @else { {{ i18n.t('form.submit') }} }
+      </button>
+    </form>
+  </section>
+
+  @if (loading()) {
+    <div class="status">🔎 {{ i18n.t('status.matching') }}</div>
+    <div class="results">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="card skeleton-card">
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line"></div>
+        </div>
+      }
+    </div>
+  }
+  @if (error(); as err) {
+    <div class="status status--error">⚠️ {{ err }}</div>
+  }
+
+  @if (result(); as res) {
+    @if (res.count === 0) {
+      <div class="status">{{ i18n.t('status.none') }}</div>
+    } @else {
+      <section class="results">
+        <div class="results__head">
+          <h2>{{ res.count }} {{ i18n.t('results.heading') }}</h2>
+          @if (!auth.isLoggedIn()) {
+            <span class="save-hint">{{ i18n.t('results.saveHint') }}</span>
+          }
+        </div>
+
+        @for (s of res.schemes; track s.id) {
+          <article class="card scheme" [class.scheme--open]="expandedId() === s.id">
+            <div class="scheme__head">
+              <span class="badge badge--{{ s.verdict }}">{{ verdictLabel(s.verdict) }}</span>
+              <span class="chip">{{ s.category }}</span>
+              <span class="chip chip--score">match {{ (s.score * 100) | number:'1.0-0' }}%</span>
+            </div>
+
+            <h3>{{ s.name }}</h3>
+            <p class="ministry">{{ s.ministry }}</p>
+            <p class="reason">{{ s.reason }}</p>
+
+            <div class="scheme__benefit"><strong>{{ i18n.t('scheme.benefit') }}</strong> {{ s.benefits }}</div>
+            <div class="scheme__apply"><strong>{{ i18n.t('scheme.apply') }}</strong> {{ s.how_to_apply }}</div>
+
+            <div class="scheme__actions">
+              <a class="btn--ghost" [href]="s.apply_url" target="_blank" rel="noopener">{{ i18n.t('scheme.official') }}</a>
+              <button class="btn--ghost" type="button" (click)="toggle(s)">
+                @if (expandedId() === s.id) { {{ i18n.t('scheme.close') }} } @else { {{ i18n.t('scheme.ask') }} }
+              </button>
+              @if (auth.isLoggedIn()) {
+                <button class="btn--ghost save-btn" type="button" (click)="save(s)"
+                  [disabled]="isSaved(s.id) || savingId() === s.id" [class.is-saved]="isSaved(s.id)">
+                  @if (isSaved(s.id)) { {{ i18n.t('scheme.saved') }} }
+                  @else if (savingId() === s.id) { {{ i18n.t('scheme.saving') }} }
+                  @else { {{ i18n.t('scheme.save') }} }
+                </button>
+              }
+            </div>
+
+            @if (expandedId() === s.id) {
+              <div class="chat">
+                <div class="chat__row">
+                  <input type="text" [(ngModel)]="chatQuestion" [name]="'q-' + s.id"
+                    [placeholder]="i18n.t('scheme.qplaceholder')" (keyup.enter)="ask(s)" />
+                  <button class="btn" type="button" (click)="ask(s)" [disabled]="chatLoading()">
+                    @if (chatLoading()) { … } @else { {{ i18n.t('scheme.askBtn') }} }
+                  </button>
+                </div>
+                @if (chatAnswer(); as ans) { <p class="chat__answer">{{ ans }}</p> }
+              </div>
+            }
+          </article>
+        }
+      </section>
+    }
+  }
+</main>
+
+<footer class="footer">
+  <p>{{ i18n.t('footer.note') }}</p>
+</footer>

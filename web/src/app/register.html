@@ -1,0 +1,29 @@
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <h1>Create your account</h1>
+    <p class="muted">Sign up to save schemes and keep a dashboard.</p>
+
+    <form (ngSubmit)="submit()" #f="ngForm">
+      <label class="full">
+        <span>Username</span>
+        <input name="username" [(ngModel)]="username" #u="ngModel" required minlength="3"
+          autocomplete="username" placeholder="at least 3 characters" />
+        @if (u.touched && u.invalid) { <small class="field-error">Username must be at least 3 characters.</small> }
+      </label>
+      <label class="full">
+        <span>Password</span>
+        <input type="password" name="password" [(ngModel)]="password" #p="ngModel" required minlength="6"
+          autocomplete="new-password" placeholder="at least 6 characters" />
+        @if (p.touched && p.invalid) { <small class="field-error">Password must be at least 6 characters.</small> }
+      </label>
+
+      @if (error(); as err) { <div class="status status--error">{{ err }}</div> }
+
+      <button class="btn btn--block" [disabled]="loading() || f.invalid">
+        @if (loading()) { Creating… } @else { Sign up }
+      </button>
+    </form>
+
+    <p class="auth-alt">Already have an account? <a routerLink="/login">Log in</a></p>
+  </div>
+</div>

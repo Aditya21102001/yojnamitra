@@ -1,0 +1,582 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+    "ministry": "Ministry of Agriculture & Farmers Welfare",
+    "category": "Agriculture",
+    "description": "Income support of Rs 6,000 per year, paid in three equal installments, directly to the bank accounts of eligible landholding farmer families.",
+    "eligibility": "Small and marginal landholding farmer families that own cultivable land. Excludes institutional landholders, income-tax payers, serving/retired government employees, and professionals like doctors and lawyers.",
+    "benefits": "Rs 6,000 per year in 3 installments via Direct Benefit Transfer.",
+    "target_groups": [
+      "farmer",
+      "landholder"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://pmkisan.gov.in",
+    "tags": [
+      "farmer",
+      "agriculture",
+      "income support",
+      "dbt",
+      "rural"
+    ]
+  },
+  {
+    "id": "pmay-g",
+    "name": "Pradhan Mantri Awas Yojana - Gramin (PMAY-G)",
+    "ministry": "Ministry of Rural Development",
+    "category": "Housing",
+    "description": "Financial assistance to build a pucca house for rural households who are homeless or living in kutcha/dilapidated houses.",
+    "eligibility": "Rural households that are houseless or living in zero/one/two-room kutcha houses, identified through SECC data and Awaas+ survey, and not already owning a pucca house.",
+    "benefits": "Rs 1.20 lakh in plain areas and Rs 1.30 lakh in hilly/difficult areas, plus MGNREGA labour and a toilet under SBM.",
+    "target_groups": [
+      "homeless",
+      "rural poor",
+      "bpl"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://pmayg.nic.in",
+    "tags": [
+      "housing",
+      "rural",
+      "bpl",
+      "pucca house",
+      "poverty"
+    ]
+  },
+  {
+    "id": "sukanya-samriddhi",
+    "name": "Sukanya Samriddhi Yojana (SSY)",
+    "ministry": "Ministry of Finance",
+    "category": "Girl Child & Savings",
+    "description": "A small-savings scheme for the girl child offering a high fixed interest rate and tax benefits, to encourage parents to save for a daughter's education and marriage.",
+    "eligibility": "Parents or legal guardians of a girl child below 10 years of age. One account per girl child, up to two girl children per family.",
+    "benefits": "High government-backed interest, tax deduction under Section 80C, and tax-free maturity proceeds.",
+    "target_groups": [
+      "girl child",
+      "parents"
+    ],
+    "gender": "female",
+    "min_age": 0,
+    "max_age": 10,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.nsiindia.gov.in",
+    "tags": [
+      "girl child",
+      "savings",
+      "education",
+      "tax benefit",
+      "daughter"
+    ]
+  },
+  {
+    "id": "pm-mudra",
+    "name": "Pradhan Mantri Mudra Yojana (PMMY)",
+    "ministry": "Ministry of Finance",
+    "category": "Business & Loans",
+    "description": "Collateral-free micro-loans to non-corporate, non-farm small and micro enterprises to start or grow a business.",
+    "eligibility": "Any Indian citizen with a viable non-farm business plan for manufacturing, trading, services, or allied agriculture activities, needing credit up to Rs 10 lakh. Loans are categorised as Shishu, Kishore, and Tarun.",
+    "benefits": "Collateral-free loans up to Rs 10 lakh through banks, NBFCs, and MFIs.",
+    "target_groups": [
+      "entrepreneur",
+      "small business",
+      "self-employed"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.mudra.org.in",
+    "tags": [
+      "business",
+      "loan",
+      "entrepreneur",
+      "self employment",
+      "msme"
+    ]
+  },
+  {
+    "id": "ayushman-bharat-pmjay",
+    "name": "Ayushman Bharat - PM Jan Arogya Yojana (PM-JAY)",
+    "ministry": "Ministry of Health & Family Welfare",
+    "category": "Health",
+    "description": "Health insurance cover of Rs 5 lakh per family per year for secondary and tertiary hospitalisation, for poor and vulnerable families.",
+    "eligibility": "Poor and vulnerable families identified through the SECC 2011 deprivation and occupational criteria (rural and urban). Senior citizens aged 70+ are also covered irrespective of income.",
+    "benefits": "Cashless hospitalisation cover of Rs 5 lakh per family per year at empanelled public and private hospitals.",
+    "target_groups": [
+      "bpl",
+      "poor",
+      "senior citizen"
+    ],
+    "gender": "any",
+    "min_age": 0,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://pmjay.gov.in",
+    "tags": [
+      "health",
+      "insurance",
+      "hospital",
+      "bpl",
+      "medical"
+    ]
+  },
+  {
+    "id": "national-scholarship-postmatric",
+    "name": "Post-Matric Scholarship (SC/ST/OBC/Minority)",
+    "ministry": "Ministry of Social Justice & Empowerment",
+    "category": "Education",
+    "description": "Scholarships to students from SC/ST/OBC/Minority communities pursuing post-matriculation (Class 11 and above) courses, to reduce dropout.",
+    "eligibility": "Students belonging to notified SC/ST/OBC/Minority categories, studying in Class 11 or above, whose family income is below the scheme's ceiling (varies by category, typically Rs 2.5 lakh per year).",
+    "benefits": "Maintenance allowance, reimbursement of course fees, and other allowances credited via DBT.",
+    "target_groups": [
+      "student",
+      "sc",
+      "st",
+      "obc",
+      "minority"
+    ],
+    "gender": "any",
+    "min_age": 15,
+    "max_age": 35,
+    "income_limit": 250000,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://scholarships.gov.in",
+    "tags": [
+      "education",
+      "scholarship",
+      "student",
+      "sc st obc",
+      "minority"
+    ]
+  },
+  {
+    "id": "stand-up-india",
+    "name": "Stand-Up India",
+    "ministry": "Ministry of Finance",
+    "category": "Business & Loans",
+    "description": "Bank loans between Rs 10 lakh and Rs 1 crore to Scheduled Caste, Scheduled Tribe, and women entrepreneurs for setting up a greenfield enterprise.",
+    "eligibility": "SC/ST and/or women entrepreneurs above 18 years, setting up a new (greenfield) manufacturing, services, trading, or allied-agriculture enterprise. For non-individual enterprises, at least 51% stake must be held by SC/ST or a woman.",
+    "benefits": "Composite loan (term + working capital) of Rs 10 lakh to Rs 1 crore per borrower.",
+    "target_groups": [
+      "woman entrepreneur",
+      "sc",
+      "st",
+      "entrepreneur"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.standupmitra.in",
+    "tags": [
+      "business",
+      "loan",
+      "women",
+      "sc st",
+      "entrepreneur",
+      "startup"
+    ]
+  },
+  {
+    "id": "pm-svanidhi",
+    "name": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+    "ministry": "Ministry of Housing & Urban Affairs",
+    "category": "Livelihood",
+    "description": "Collateral-free working-capital loans for urban street vendors to resume and grow their businesses, with an interest subsidy for timely repayment.",
+    "eligibility": "Urban street vendors who were vending on or before 24 March 2020 and hold a Certificate of Vending or are identified by the Urban Local Body / Town Vending Committee.",
+    "benefits": "Working-capital loan starting at Rs 10,000, enhanced to Rs 20,000 and Rs 50,000 on timely repayment, with 7% interest subsidy and cashback on digital transactions.",
+    "target_groups": [
+      "street vendor",
+      "urban poor",
+      "self-employed"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://pmsvanidhi.mohua.gov.in",
+    "tags": [
+      "street vendor",
+      "loan",
+      "urban",
+      "livelihood",
+      "working capital"
+    ]
+  },
+  {
+    "id": "atal-pension-yojana",
+    "name": "Atal Pension Yojana (APY)",
+    "ministry": "Ministry of Finance",
+    "category": "Pension",
+    "description": "A guaranteed monthly pension scheme aimed at workers in the unorganised sector, funded by the subscriber's own contributions.",
+    "eligibility": "Any Indian citizen aged 18 to 40 years with a savings bank account. Not applicable to income-tax payers (from Oct 2022).",
+    "benefits": "Guaranteed monthly pension of Rs 1,000 to Rs 5,000 from age 60, based on contributions.",
+    "target_groups": [
+      "unorganised worker",
+      "self-employed",
+      "worker"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": 40,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.npscra.nsdl.co.in",
+    "tags": [
+      "pension",
+      "retirement",
+      "unorganised sector",
+      "savings"
+    ]
+  },
+  {
+    "id": "pm-ujjwala",
+    "name": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+    "ministry": "Ministry of Petroleum & Natural Gas",
+    "category": "Energy & Women",
+    "description": "Provides free LPG (cooking gas) connections to women from poor households to reduce dependence on polluting cooking fuels.",
+    "eligibility": "Adult women belonging to poor households (BPL, SC/ST, PMAY beneficiaries, Antyodaya, forest dwellers, and other listed categories) who do not already have an LPG connection in the household.",
+    "benefits": "Free LPG connection with a deposit-free cylinder and first refill/stove support.",
+    "target_groups": [
+      "woman",
+      "bpl",
+      "rural"
+    ],
+    "gender": "female",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.pmuy.gov.in",
+    "tags": [
+      "lpg",
+      "women",
+      "cooking gas",
+      "bpl",
+      "energy"
+    ]
+  },
+  {
+    "id": "kisan-credit-card",
+    "name": "Kisan Credit Card (KCC)",
+    "ministry": "Ministry of Agriculture & Farmers Welfare",
+    "category": "Agriculture",
+    "description": "Provides farmers with timely and affordable short-term credit for cultivation and other agricultural needs at a subsidised interest rate.",
+    "eligibility": "Farmers who are individual or joint cultivators, tenant farmers, oral lessees, sharecroppers, and members of Self Help Groups or Joint Liability Groups engaged in agriculture, animal husbandry, or fisheries.",
+    "benefits": "Short-term crop loans at subsidised interest (as low as 4% per year with prompt repayment), plus a flexible credit limit.",
+    "target_groups": [
+      "farmer",
+      "tenant farmer",
+      "fisher"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.myscheme.gov.in/schemes/kcc",
+    "tags": [
+      "farmer",
+      "credit",
+      "loan",
+      "agriculture",
+      "crop"
+    ]
+  },
+  {
+    "id": "pmmvy",
+    "name": "Pradhan Mantri Matru Vandana Yojana (PMMVY)",
+    "ministry": "Ministry of Women & Child Development",
+    "category": "Women & Health",
+    "description": "A maternity benefit programme providing partial wage compensation to pregnant and lactating women for their first living child.",
+    "eligibility": "Pregnant and lactating women aged 19 or above for the first living child. The second child is covered only if it is a girl child.",
+    "benefits": "Cash incentive of Rs 5,000 for the first child (in installments) and Rs 6,000 for a second girl child, via DBT.",
+    "target_groups": [
+      "pregnant woman",
+      "mother",
+      "woman"
+    ],
+    "gender": "female",
+    "min_age": 19,
+    "max_age": 49,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://wcd.nic.in/schemes/pradhan-mantri-matru-vandana-yojana",
+    "tags": [
+      "maternity",
+      "women",
+      "pregnancy",
+      "mother",
+      "health",
+      "dbt"
+    ]
+  },
+  {
+    "id": "pmkvy",
+    "name": "Pradhan Mantri Kaushal Vikas Yojana (PMKVY)",
+    "ministry": "Ministry of Skill Development & Entrepreneurship",
+    "category": "Skilling",
+    "description": "Free short-term skill training and certification for youth to improve employability, including recognition of prior learning.",
+    "eligibility": "Indian youth, typically 15-45 years, who are unemployed or school/college dropouts and want industry-relevant skill training. No fee for the candidate.",
+    "benefits": "Free training, a government-recognised certificate, and placement assistance.",
+    "target_groups": [
+      "youth",
+      "unemployed",
+      "student"
+    ],
+    "gender": "any",
+    "min_age": 15,
+    "max_age": 45,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.pmkvyofficial.org",
+    "tags": [
+      "skill",
+      "training",
+      "youth",
+      "employment",
+      "certificate"
+    ]
+  },
+  {
+    "id": "startup-india-seed-fund",
+    "name": "Startup India Seed Fund Scheme (SISFS)",
+    "ministry": "Department for Promotion of Industry & Internal Trade (DPIIT)",
+    "category": "Business & Loans",
+    "description": "Financial assistance to early-stage startups for proof of concept, prototype development, product trials, and market entry.",
+    "eligibility": "DPIIT-recognised startups incorporated not more than 2 years ago at the time of application, with a business idea using technology, not having received more than Rs 10 lakh of other government funding.",
+    "benefits": "Grants up to Rs 20 lakh for validation/prototype and up to Rs 50 lakh for market entry via convertible debentures/debt.",
+    "target_groups": [
+      "entrepreneur",
+      "startup",
+      "founder"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://seedfund.startupindia.gov.in",
+    "tags": [
+      "startup",
+      "seed fund",
+      "entrepreneur",
+      "grant",
+      "innovation"
+    ]
+  },
+  {
+    "id": "nsap-ignoaps",
+    "name": "National Social Assistance Programme (Old Age Pension - IGNOAPS)",
+    "ministry": "Ministry of Rural Development",
+    "category": "Pension",
+    "description": "Monthly pension to elderly persons from below-poverty-line households under the Indira Gandhi National Old Age Pension Scheme.",
+    "eligibility": "Persons aged 60 years or above belonging to a below-poverty-line (BPL) household. Pension amount increases after age 80.",
+    "benefits": "Monthly old-age pension credited via DBT (amount varies by age and state top-up).",
+    "target_groups": [
+      "senior citizen",
+      "elderly",
+      "bpl"
+    ],
+    "gender": "any",
+    "min_age": 60,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://nsap.nic.in",
+    "tags": [
+      "pension",
+      "old age",
+      "elderly",
+      "bpl",
+      "social security"
+    ]
+  },
+  {
+    "id": "pmjjby",
+    "name": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+    "ministry": "Ministry of Finance",
+    "category": "Insurance",
+    "description": "A low-premium life insurance scheme offering life cover for one year, renewable annually, linked to a bank account.",
+    "eligibility": "Individuals aged 18 to 50 years holding a savings bank account who give consent to auto-debit the premium.",
+    "benefits": "Life cover of Rs 2 lakh for a premium of about Rs 436 per year.",
+    "target_groups": [
+      "worker",
+      "adult",
+      "account holder"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": 50,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.jansuraksha.gov.in",
+    "tags": [
+      "insurance",
+      "life cover",
+      "low premium",
+      "bank"
+    ]
+  },
+  {
+    "id": "pmsby",
+    "name": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+    "ministry": "Ministry of Finance",
+    "category": "Insurance",
+    "description": "A very low-premium accidental death and disability insurance scheme linked to a bank account.",
+    "eligibility": "Individuals aged 18 to 70 years holding a savings bank account who give consent to auto-debit the premium.",
+    "benefits": "Accidental death/full disability cover of Rs 2 lakh for a premium of about Rs 20 per year.",
+    "target_groups": [
+      "worker",
+      "adult",
+      "account holder"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": 70,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.jansuraksha.gov.in",
+    "tags": [
+      "insurance",
+      "accident",
+      "disability",
+      "low premium",
+      "bank"
+    ]
+  },
+  {
+    "id": "pm-surya-ghar",
+    "name": "PM Surya Ghar: Muft Bijli Yojana (Rooftop Solar)",
+    "ministry": "Ministry of New & Renewable Energy",
+    "category": "Energy",
+    "description": "Subsidy for installing rooftop solar panels on homes to reduce electricity bills and promote clean energy.",
+    "eligibility": "Indian households that own a house with a suitable rooftop and a valid electricity connection, and have not already availed a rooftop solar subsidy.",
+    "benefits": "Central financial assistance (subsidy) covering a substantial part of the rooftop solar system cost, plus free electricity up to 300 units/month.",
+    "target_groups": [
+      "homeowner",
+      "household"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://pmsuryaghar.gov.in",
+    "tags": [
+      "solar",
+      "rooftop",
+      "electricity",
+      "subsidy",
+      "renewable energy"
+    ]
+  },
+  {
+    "id": "cgtmse",
+    "name": "Credit Guarantee Fund for Micro & Small Enterprises (CGTMSE)",
+    "ministry": "Ministry of MSME",
+    "category": "Business & Loans",
+    "description": "Provides a credit guarantee to banks so that micro and small enterprises can get collateral-free loans.",
+    "eligibility": "New and existing micro and small enterprises (manufacturing or service) seeking working capital or term loans, sanctioned without third-party collateral or guarantee.",
+    "benefits": "Guarantee cover on collateral-free credit up to Rs 5 crore, making bank loans easier to obtain for small businesses.",
+    "target_groups": [
+      "small business",
+      "entrepreneur",
+      "msme"
+    ],
+    "gender": "any",
+    "min_age": 18,
+    "max_age": null,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://www.cgtmse.in",
+    "tags": [
+      "msme",
+      "loan",
+      "collateral free",
+      "credit guarantee",
+      "business"
+    ]
+  },
+  {
+    "id": "ddu-gky",
+    "name": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana (DDU-GKY)",
+    "ministry": "Ministry of Rural Development",
+    "category": "Skilling",
+    "description": "Skill training and assured placement for rural poor youth to enable wage employment.",
+    "eligibility": "Rural youth aged 15 to 35 years from poor families (with relaxations up to 45 for women and other special groups).",
+    "benefits": "Free residential/non-residential skill training with certification and guaranteed placement support.",
+    "target_groups": [
+      "rural youth",
+      "unemployed",
+      "bpl"
+    ],
+    "gender": "any",
+    "min_age": 15,
+    "max_age": 35,
+    "income_limit": null,
+    "states": [
+      "ALL"
+    ],
+    "apply_url": "https://ddugky.gov.in",
+    "tags": [
+      "skill",
+      "rural",
+      "youth",
+      "placement",
+      "employment"
+    ]
+  }
+]

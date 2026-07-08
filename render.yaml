@@ -1,0 +1,47 @@
+# Render blueprint for YojanaMitra. See DEPLOY.md for the LLM-hosting caveat.
+services:
+  - type: web
+    name: yojanamitra-api
+    runtime: docker
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
+    envVars:
+      - key: DB_ENGINE
+        value: postgres
+      - key: DB_HOST
+        fromDatabase: { name: yojanamitra-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: yojanamitra-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: yojanamitra-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: yojanamitra-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: yojanamitra-db, property: password }
+      - key: YOJANAMITRA_JWT_SECRET
+        generateValue: true
+      - key: YOJANAMITRA_AI_BASE_URL
+        sync: false            # set to your deployed GenAI service URL
+
+  - type: web
+    name: yojanamitra-ai
+    runtime: docker
+    dockerfilePath: ./ai/Dockerfile
+    dockerContext: ./ai
+    envVars:
+      - key: OLLAMA_HOST
+        sync: false            # set to your Ollama host (free tiers can't run Ollama)
+
+  - type: web
+    name: yojanamitra-web
+    runtime: static
+    buildCommand: cd web && npm ci && npx ng build
+    staticPublishPath: ./web/dist/web/browser
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: yojanamitra-db
+    plan: free

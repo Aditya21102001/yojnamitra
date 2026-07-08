@@ -1,0 +1,22 @@
+:host { display: block; }
+
+.dash-title { margin: 0 0 .25rem; }
+.dash-h2 { margin: 1.75rem 0 1rem; font-size: 1.2rem; }
+
+.saved { margin-bottom: 1rem; }
+.saved__head { display: flex; gap: .4rem; margin-bottom: .35rem; }
+.saved h3 { margin: .1rem 0; font-size: 1.1rem; }
+.saved .reason { margin: 0 0 .75rem; color: #374151; font-size: .92rem; }
+.saved__actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+
+.history-list { list-style: none; padding: 0; margin: 0; }
+.history-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .6rem .2rem;
+  border-bottom: 1px solid var(--line);
+  font-size: .92rem;
+}
+.history-q { color: #374151; }
+.history-meta { color: #6b7280; white-space: nowrap; }

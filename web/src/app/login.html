@@ -1,0 +1,27 @@
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <h1>Log in</h1>
+    <p class="muted">Welcome back — access your saved schemes.</p>
+
+    <form (ngSubmit)="submit()" #f="ngForm">
+      <label class="full">
+        <span>Username</span>
+        <input name="username" [(ngModel)]="username" #u="ngModel" required autocomplete="username" />
+        @if (u.touched && u.invalid) { <small class="field-error">Username is required.</small> }
+      </label>
+      <label class="full">
+        <span>Password</span>
+        <input type="password" name="password" [(ngModel)]="password" #p="ngModel" required autocomplete="current-password" />
+        @if (p.touched && p.invalid) { <small class="field-error">Password is required.</small> }
+      </label>
+
+      @if (error(); as err) { <div class="status status--error">{{ err }}</div> }
+
+      <button class="btn btn--block" [disabled]="loading() || f.invalid">
+        @if (loading()) { Logging in… } @else { Log in }
+      </button>
+    </form>
+
+    <p class="auth-alt">New here? <a routerLink="/register">Create an account</a></p>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+# PostgreSQL datasource. Active when DB_ENGINE=postgres.
+# Works with a local Postgres, Docker (see docker-compose.yml), or a cloud
+# Postgres like Neon/Supabase. For Neon, set DB_SSLMODE=require (SSL is mandatory).
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yojanamitra}?sslmode=${DB_SSLMODE:prefer}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect

@@ -1,0 +1,24 @@
+# ---- Python (ai service) ----
+ai/.venv/
+ai/__pycache__/
+ai/**/__pycache__/
+ai/*.pyc
+ai/data/index.json
+ai/.env
+
+# ---- Java / Spring Boot (api service) ----
+api/target/
+api/.mvn/
+api/*.iml
+api/.idea/
+
+# ---- Angular (web) ----
+web/node_modules/
+web/dist/
+web/.angular/
+web/.env
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+*.log
