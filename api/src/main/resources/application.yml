@@ -30,6 +30,19 @@ yojanamitra:
     # Encrypts TOTP secrets at rest. Override with YOJANAMITRA_MFA_ENC_KEY in
     # production; rotating it makes every existing enrolment undecryptable.
     encryption-key: ${YOJANAMITRA_MFA_ENC_KEY:change-me-dev-only-mfa-encryption-key}
+  web:
+    # Used to build the password-reset link that goes into the email.
+    base-url: ${YOJANAMITRA_WEB_BASE_URL:http://localhost:4200}
+  reset:
+    ttl-minutes: 15
+  mail:
+    # "log" writes emails to the application log — free, offline, and the right
+    # default for dev. Set "brevo" (+ BREVO_API_KEY) to actually deliver them.
+    provider: ${YOJANAMITRA_MAIL_PROVIDER:log}
+    from-email: ${YOJANAMITRA_MAIL_FROM:no-reply@yojanamitra.example}
+    from-name: YojanaMitra
+    brevo:
+      api-key: ${BREVO_API_KEY:}
 
 logging:
   level:

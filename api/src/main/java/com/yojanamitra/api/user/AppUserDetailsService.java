@@ -1,6 +1,5 @@
 package com.yojanamitra.api.user;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,9 +19,6 @@ public class AppUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = users.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("No user: " + username));
-        return User.withUsername(user.getUsername())
-                .password(user.getPassword())
-                .authorities("USER")
-                .build();
+        return new AppUserPrincipal(user);
     }
 }

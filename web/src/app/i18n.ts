@@ -182,7 +182,6 @@ const DICT: Record<string, { en: string; hi: string }> = {
   'mfa.disableConfirm': { en: 'Turn off', hi: 'बंद करें' },
   'mfa.cancel': { en: 'Cancel', hi: 'रद्द करें' },
   'mfa.working': { en: 'Working…', hi: 'हो रहा है…' },
-  'mfa.enabled': { en: 'Two-factor authentication enabled', hi: 'दो-चरणीय सत्यापन चालू हो गया' },
   'mfa.disabled': { en: 'Two-factor authentication turned off', hi: 'दो-चरणीय सत्यापन बंद कर दिया गया' },
 
   'mfa.recoveryTitle': { en: 'Save your recovery codes now', hi: 'अपने रिकवरी कोड अभी सहेजें' },

@@ -64,7 +64,9 @@ export class MfaSettings implements OnInit {
         this.code = '';
         this.busy.set(false);
         this.status.set({ enabled: true, recoveryCodesRemaining: res.recoveryCodes.length });
-        this.toast.show(this.i18n.t('mfa.enabled'));
+        // Deliberately no toast: it is pinned to the bottom of the viewport and
+        // would cover the recovery-code panel's buttons. That panel is a
+        // role="alert" success state in its own right, so nothing is lost.
       },
       error: (err) => {
         this.error.set(this.message(err));

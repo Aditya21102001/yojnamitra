@@ -62,6 +62,15 @@ public class JwtService {
      * the password skip the second factor entirely.
      */
     public String extractUsername(String token, TokenType expected) {
+        return parse(token, expected).getSubject();
+    }
+
+    /** When the token was minted. Used to retire tokens older than a password change. */
+    public Instant extractIssuedAt(String token, TokenType expected) {
+        return parse(token, expected).getIssuedAt().toInstant();
+    }
+
+    private Claims parse(String token, TokenType expected) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)
                 .build()
@@ -72,6 +81,6 @@ public class JwtService {
         if (!expected.name().equals(actual)) {
             throw new JwtException("Expected a " + expected + " token but got " + actual);
         }
-        return claims.getSubject();
+        return claims;
     }
 }

@@ -24,6 +24,20 @@ public class AppUser {
     @Column(nullable = false)
     private String password;
 
+    /**
+     * Nullable: accounts created before password reset existed have none, and a
+     * user without one simply cannot self-serve a reset.
+     */
+    @Column(unique = true)
+    private String email;
+
+    /**
+     * When the password last changed. {@code JwtAuthFilter} rejects any token
+     * issued before this instant, so resetting a password evicts an attacker
+     * who is holding a still-unexpired session token.
+     */
+    private Instant passwordChangedAt;
+
     private Instant createdAt = Instant.now();
 
     /**
@@ -56,8 +70,13 @@ public class AppUser {
     }
 
     public AppUser(String username, String password) {
+        this(username, password, null);
+    }
+
+    public AppUser(String username, String password, String email) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.createdAt = Instant.now();
     }
 
@@ -71,6 +90,24 @@ public class AppUser {
 
     public String getPassword() {
         return password;
+    }
+
+    /** Also stamps {@link #passwordChangedAt}, which is what retires old tokens. */
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+        this.passwordChangedAt = Instant.now();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Instant getPasswordChangedAt() {
+        return passwordChangedAt;
     }
 
     public Instant getCreatedAt() {

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,14 +33,17 @@ public class AuthController {
     private final AuthenticationManager authManager;
     private final JwtService jwt;
     private final MfaService mfa;
+    private final PasswordResetService passwordReset;
 
     public AuthController(AppUserRepository users, PasswordEncoder encoder,
-                          AuthenticationManager authManager, JwtService jwt, MfaService mfa) {
+                          AuthenticationManager authManager, JwtService jwt, MfaService mfa,
+                          PasswordResetService passwordReset) {
         this.users = users;
         this.encoder = encoder;
         this.authManager = authManager;
         this.jwt = jwt;
         this.mfa = mfa;
+        this.passwordReset = passwordReset;
     }
 
     @PostMapping("/register")
@@ -46,8 +51,33 @@ public class AuthController {
         if (users.existsByUsername(req.username())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username is already taken");
         }
-        AppUser user = users.save(new AppUser(req.username(), encoder.encode(req.password())));
+        String email = (req.email() == null || req.email().isBlank()) ? null : req.email().trim();
+        if (email != null && users.existsByEmailIgnoreCase(email)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "That email is already registered");
+        }
+        AppUser user = users.save(new AppUser(req.username(), encoder.encode(req.password()), email));
         return AuthResponse.authenticated(jwt.generateAccess(user.getUsername()), user.getUsername());
+    }
+
+    // ---- forgotten password ----
+
+    /** Always 204, for any input: a different answer would reveal which accounts exist. */
+    @PostMapping("/forgot")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void forgot(@Valid @RequestBody ForgotPasswordRequest req) {
+        passwordReset.requestReset(req.usernameOrEmail());
+    }
+
+    @GetMapping("/reset/precheck")
+    public ResetPrecheckResponse resetPrecheck(@RequestParam String token) {
+        return passwordReset.precheck(token);
+    }
+
+    /** Issues no session on purpose — the user logs in again, which re-applies MFA. */
+    @PostMapping("/reset")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void reset(@Valid @RequestBody ResetPasswordRequest req) {
+        passwordReset.reset(req.token(), req.newPassword(), req.code());
     }
 
     /**
