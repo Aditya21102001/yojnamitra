@@ -19,7 +19,8 @@ ENV LLM_PROVIDER=groq \
     JINA_MODEL=jina-embeddings-v2-base-en
 
 EXPOSE 8000
-# Try to build the vector index on boot, but NEVER let a seed failure crash the
-# container — uvicorn always starts, and store.ensure_seeded() builds the index
-# lazily on the first match if boot-seeding was skipped.
-CMD ["sh", "-c", "python seed.py || echo 'seed skipped on boot; will build index lazily on first match'; uvicorn main:app --host 0.0.0.0 --port 8000"]
+# Start immediately and bind the platform's $PORT (Render/Cloud set it) so the
+# port is detected right away. Do NOT seed at boot — that delayed startup and
+# spiked memory on a 512MB instance. store.ensure_seeded() builds the small
+# index lazily on the first /match instead.
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
