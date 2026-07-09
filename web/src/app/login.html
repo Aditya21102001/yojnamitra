@@ -1,38 +1,63 @@
 <main class="auth-wrap" id="main-content" tabindex="-1">
   <div class="card auth-card">
-    <h1>{{ i18n.t('auth.loginTitle') }}</h1>
-    <p class="muted">{{ i18n.t('auth.loginSubtitle') }}</p>
+    @if (mfaToken()) {
+      <h1>{{ i18n.t('mfa.verifyTitle') }}</h1>
+      <p class="muted">{{ i18n.t('mfa.verifySubtitle') }}</p>
 
-    <form (ngSubmit)="submit()" #f="ngForm">
-      <label class="full">
-        <span>{{ i18n.t('auth.username') }}</span>
-        <input name="username" [(ngModel)]="username" #u="ngModel" required autocomplete="username"
-          [attr.aria-invalid]="u.touched && u.invalid ? 'true' : null"
-          [attr.aria-describedby]="u.touched && u.invalid ? 'login-username-error' : null" />
-        @if (u.touched && u.invalid) {
-          <small class="field-error" id="login-username-error">{{ i18n.t('auth.usernameRequired') }}</small>
-        }
-      </label>
-      <label class="full">
-        <span>{{ i18n.t('auth.password') }}</span>
-        <input type="password" name="password" [(ngModel)]="password" #p="ngModel" required
-          autocomplete="current-password"
-          [attr.aria-invalid]="p.touched && p.invalid ? 'true' : null"
-          [attr.aria-describedby]="p.touched && p.invalid ? 'login-password-error' : null" />
-        @if (p.touched && p.invalid) {
-          <small class="field-error" id="login-password-error">{{ i18n.t('auth.passwordRequired') }}</small>
-        }
-      </label>
+      <form (ngSubmit)="verify()">
+        <label class="full">
+          <span>{{ i18n.t('mfa.codeLabel') }}</span>
+          <input name="code" [(ngModel)]="code" required autocomplete="one-time-code"
+            inputmode="numeric" autofocus
+            [placeholder]="i18n.t('mfa.codePlaceholder')" />
+        </label>
 
-      @if (error(); as err) { <div class="status status--error" role="alert">{{ err }}</div> }
+        @if (error(); as err) { <div class="status status--error" role="alert">{{ err }}</div> }
 
-      <button class="btn btn--block" [disabled]="loading() || f.invalid">
-        @if (loading()) { {{ i18n.t('auth.loggingIn') }} } @else { {{ i18n.t('auth.loginTitle') }} }
-      </button>
-    </form>
+        <button class="btn btn--block" [disabled]="loading() || !code.trim()">
+          @if (loading()) { {{ i18n.t('mfa.verifying') }} } @else { {{ i18n.t('mfa.verifyBtn') }} }
+        </button>
+      </form>
 
-    <p class="auth-alt">
-      {{ i18n.t('auth.newHere') }} <a routerLink="/register">{{ i18n.t('auth.createAccount') }}</a>
-    </p>
+      <p class="auth-alt">
+        {{ i18n.t('mfa.recoveryHint') }}
+        <button type="button" class="linkish" (click)="cancelMfa()">{{ i18n.t('mfa.startOver') }}</button>
+      </p>
+    } @else {
+      <h1>{{ i18n.t('auth.loginTitle') }}</h1>
+      <p class="muted">{{ i18n.t('auth.loginSubtitle') }}</p>
+
+      <form (ngSubmit)="submit()" #f="ngForm">
+        <label class="full">
+          <span>{{ i18n.t('auth.username') }}</span>
+          <input name="username" [(ngModel)]="username" #u="ngModel" required autocomplete="username"
+            [attr.aria-invalid]="u.touched && u.invalid ? 'true' : null"
+            [attr.aria-describedby]="u.touched && u.invalid ? 'login-username-error' : null" />
+          @if (u.touched && u.invalid) {
+            <small class="field-error" id="login-username-error">{{ i18n.t('auth.usernameRequired') }}</small>
+          }
+        </label>
+        <label class="full">
+          <span>{{ i18n.t('auth.password') }}</span>
+          <input type="password" name="password" [(ngModel)]="password" #p="ngModel" required
+            autocomplete="current-password"
+            [attr.aria-invalid]="p.touched && p.invalid ? 'true' : null"
+            [attr.aria-describedby]="p.touched && p.invalid ? 'login-password-error' : null" />
+          @if (p.touched && p.invalid) {
+            <small class="field-error" id="login-password-error">{{ i18n.t('auth.passwordRequired') }}</small>
+          }
+        </label>
+
+        @if (error(); as err) { <div class="status status--error" role="alert">{{ err }}</div> }
+
+        <button class="btn btn--block" [disabled]="loading() || f.invalid">
+          @if (loading()) { {{ i18n.t('auth.loggingIn') }} } @else { {{ i18n.t('auth.loginTitle') }} }
+        </button>
+      </form>
+
+      <p class="auth-alt">
+        {{ i18n.t('auth.newHere') }} <a routerLink="/register">{{ i18n.t('auth.createAccount') }}</a>
+      </p>
+    }
   </div>
 </main>

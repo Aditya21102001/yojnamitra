@@ -4,12 +4,13 @@ import { RouterLink } from '@angular/router';
 import { Api } from './api';
 import { Auth } from './auth';
 import { I18n } from './i18n';
+import { MfaSettings } from './mfa-settings';
 import { HistoryItem, SavedScheme } from './models';
 import { Toast } from './toast';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MfaSettings],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -44,8 +45,6 @@ export class Dashboard implements OnInit {
   /** SavedScheme.verdict is a plain string, so fall back to the raw value
    *  rather than rendering a missing translation key. */
   verdictLabel(verdict: string): string {
-    const key = 'verdict.' + verdict;
-    const label = this.i18n.t(key);
-    return label === key ? verdict : label;
+    return this.i18n.t('verdict.' + verdict, verdict);
   }
 }

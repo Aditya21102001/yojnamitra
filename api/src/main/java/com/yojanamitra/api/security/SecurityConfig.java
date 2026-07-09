@@ -38,7 +38,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsSource))
                 .authorizeHttpRequests(auth -> auth
-                        // public: auth, health, browsing schemes, and trying a match
+                        // MFA enrolment must be listed BEFORE the /api/auth/** wildcard
+                        // below, or it inherits permitAll and lets anyone mint or strip
+                        // another account's second factor. First match wins.
+                        .requestMatchers("/api/auth/mfa/status", "/api/auth/mfa/setup",
+                                "/api/auth/mfa/enable", "/api/auth/mfa/disable").authenticated()
+                        // public: register/login/mfa-verify, health, browsing schemes, trying a match
                         .requestMatchers("/api/auth/**", "/api/health", "/api/schemes",
                                 "/api/match", "/api/chat").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()

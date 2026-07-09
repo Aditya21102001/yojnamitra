@@ -22,3 +22,8 @@ web/.env
 .DS_Store
 Thumbs.db
 *.log
+
+# ---- local build / crash artifacts ----
+api/cp.txt
+api/hs_err_pid*.log
+**/*.stackdump

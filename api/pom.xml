@@ -67,6 +67,14 @@
             <version>0.12.6</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- TOTP multi-factor auth (RFC 6238): secret generation, code
+             verification, recovery codes, QR rendering. Apache-2.0, no paid service. -->
+        <dependency>
+            <groupId>dev.samstevens.totp</groupId>
+            <artifactId>totp</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

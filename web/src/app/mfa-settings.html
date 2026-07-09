@@ -1,0 +1,95 @@
+<section class="card mfa" aria-labelledby="mfa-heading">
+  <h2 id="mfa-heading" class="mfa__title">
+    <span aria-hidden="true">🔐</span> {{ i18n.t('mfa.heading') }}
+  </h2>
+
+  @if (status(); as s) {
+    @if (s.enabled) {
+      <p class="mfa__state mfa__state--on">
+        <span aria-hidden="true">✓</span> {{ i18n.t('mfa.stateOn') }}
+      </p>
+      <p class="muted">
+        {{ s.recoveryCodesRemaining }} {{ i18n.t('mfa.codesRemaining') }}
+      </p>
+
+      @if (!disabling()) {
+        <button class="btn--ghost" type="button" (click)="toggleDisableForm()">
+          {{ i18n.t('mfa.disableBtn') }}
+        </button>
+      } @else {
+        <form class="mfa__form" (ngSubmit)="disable()">
+          <p class="muted">{{ i18n.t('mfa.disableExplain') }}</p>
+          <label class="full">
+            <span>{{ i18n.t('auth.password') }}</span>
+            <input type="password" name="disablePassword" [(ngModel)]="disablePassword"
+              autocomplete="current-password" required />
+          </label>
+          <label class="full">
+            <span>{{ i18n.t('mfa.codeLabel') }}</span>
+            <input name="disableCode" [(ngModel)]="disableCode" inputmode="numeric"
+              autocomplete="one-time-code" required
+              [placeholder]="i18n.t('mfa.codePlaceholder')" />
+          </label>
+
+          @if (error(); as err) { <div class="status status--error" role="alert">{{ err }}</div> }
+
+          <div class="mfa__actions">
+            <button class="btn" type="submit" [disabled]="busy() || !disablePassword || !disableCode.trim()">
+              @if (busy()) { {{ i18n.t('mfa.working') }} } @else { {{ i18n.t('mfa.disableConfirm') }} }
+            </button>
+            <button class="btn--ghost" type="button" (click)="toggleDisableForm()">
+              {{ i18n.t('mfa.cancel') }}
+            </button>
+          </div>
+        </form>
+      }
+    } @else if (setup(); as enrol) {
+      <p class="muted">{{ i18n.t('mfa.scanExplain') }}</p>
+      <p class="mfa__apps">{{ i18n.t('mfa.appSuggestions') }}</p>
+
+      <img class="mfa__qr" [src]="enrol.qrDataUri" [alt]="i18n.t('mfa.qrAlt')" width="220" height="220" />
+
+      <p class="mfa__manual">
+        {{ i18n.t('mfa.manualEntry') }}
+        <code class="mfa__secret">{{ enrol.secret }}</code>
+      </p>
+
+      <form class="mfa__form" (ngSubmit)="enable()">
+        <label class="full">
+          <span>{{ i18n.t('mfa.confirmLabel') }}</span>
+          <input name="code" [(ngModel)]="code" inputmode="numeric" autocomplete="one-time-code"
+            required [placeholder]="i18n.t('mfa.codePlaceholder')" />
+        </label>
+
+        @if (error(); as err) { <div class="status status--error" role="alert">{{ err }}</div> }
+
+        <div class="mfa__actions">
+          <button class="btn" type="submit" [disabled]="busy() || !code.trim()">
+            @if (busy()) { {{ i18n.t('mfa.working') }} } @else { {{ i18n.t('mfa.enableConfirm') }} }
+          </button>
+          <button class="btn--ghost" type="button" (click)="cancelSetup()">{{ i18n.t('mfa.cancel') }}</button>
+        </div>
+      </form>
+    } @else {
+      <p class="muted">{{ i18n.t('mfa.explain') }}</p>
+      @if (error(); as err) { <div class="status status--error" role="alert">{{ err }}</div> }
+      <button class="btn" type="button" (click)="beginSetup()" [disabled]="busy()">
+        @if (busy()) { {{ i18n.t('mfa.working') }} } @else { {{ i18n.t('mfa.enableBtn') }} }
+      </button>
+    }
+  }
+
+  @if (recoveryCodes(); as codes) {
+    <div class="mfa__recovery" role="alert">
+      <h3>{{ i18n.t('mfa.recoveryTitle') }}</h3>
+      <p class="muted">{{ i18n.t('mfa.recoveryExplain') }}</p>
+      <ul class="mfa__codes">
+        @for (c of codes; track c) { <li><code>{{ c }}</code></li> }
+      </ul>
+      <div class="mfa__actions">
+        <button class="btn--ghost" type="button" (click)="copyRecoveryCodes()">{{ i18n.t('mfa.copy') }}</button>
+        <button class="btn--ghost" type="button" (click)="dismissRecoveryCodes()">{{ i18n.t('mfa.savedThem') }}</button>
+      </div>
+    </div>
+  }
+</section>

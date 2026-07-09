@@ -22,6 +22,14 @@ yojanamitra:
     # Dev secret — override with the YOJANAMITRA_JWT_SECRET env var in production.
     secret: ${YOJANAMITRA_JWT_SECRET:change-me-dev-secret-please-use-a-long-random-value-32b+}
     expiration-ms: 86400000   # 24 hours
+    # How long the user has to enter a code after the password step succeeds.
+    mfa-challenge-ms: 300000  # 5 minutes
+  mfa:
+    # Shown as the account issuer in Google Authenticator / Authy.
+    issuer: YojanaMitra
+    # Encrypts TOTP secrets at rest. Override with YOJANAMITRA_MFA_ENC_KEY in
+    # production; rotating it makes every existing enrolment undecryptable.
+    encryption-key: ${YOJANAMITRA_MFA_ENC_KEY:change-me-dev-only-mfa-encryption-key}
 
 logging:
   level:

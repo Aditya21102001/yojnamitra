@@ -48,6 +48,42 @@ const DICT: Record<string, { en: string; hi: string }> = {
     hi: 'जैसे— मैं एक छोटा सिलाई व्यवसाय शुरू करना चाहता/चाहती हूँ और बिना गारंटी का ऋण चाहिए',
   },
 
+  // ---- Select options ----
+  // Labels only. The <option value> stays English because it is sent to the
+  // API as the profile and matched against the English scheme dataset.
+  'gender.male': { en: 'Male', hi: 'पुरुष' },
+  'gender.female': { en: 'Female', hi: 'महिला' },
+  'gender.other': { en: 'Other', hi: 'अन्य' },
+
+  // The English acronym is kept in the Hindi label — official forms use it.
+  'category.General': { en: 'General', hi: 'सामान्य' },
+  'category.SC': { en: 'SC', hi: 'अनुसूचित जाति (SC)' },
+  'category.ST': { en: 'ST', hi: 'अनुसूचित जनजाति (ST)' },
+  'category.OBC': { en: 'OBC', hi: 'अन्य पिछड़ा वर्ग (OBC)' },
+  'category.Minority': { en: 'Minority', hi: 'अल्पसंख्यक' },
+
+  'state.Andhra Pradesh': { en: 'Andhra Pradesh', hi: 'आंध्र प्रदेश' },
+  'state.Assam': { en: 'Assam', hi: 'असम' },
+  'state.Bihar': { en: 'Bihar', hi: 'बिहार' },
+  'state.Chhattisgarh': { en: 'Chhattisgarh', hi: 'छत्तीसगढ़' },
+  'state.Delhi': { en: 'Delhi', hi: 'दिल्ली' },
+  'state.Gujarat': { en: 'Gujarat', hi: 'गुजरात' },
+  'state.Haryana': { en: 'Haryana', hi: 'हरियाणा' },
+  'state.Himachal Pradesh': { en: 'Himachal Pradesh', hi: 'हिमाचल प्रदेश' },
+  'state.Jharkhand': { en: 'Jharkhand', hi: 'झारखंड' },
+  'state.Karnataka': { en: 'Karnataka', hi: 'कर्नाटक' },
+  'state.Kerala': { en: 'Kerala', hi: 'केरल' },
+  'state.Madhya Pradesh': { en: 'Madhya Pradesh', hi: 'मध्य प्रदेश' },
+  'state.Maharashtra': { en: 'Maharashtra', hi: 'महाराष्ट्र' },
+  'state.Odisha': { en: 'Odisha', hi: 'ओडिशा' },
+  'state.Punjab': { en: 'Punjab', hi: 'पंजाब' },
+  'state.Rajasthan': { en: 'Rajasthan', hi: 'राजस्थान' },
+  'state.Tamil Nadu': { en: 'Tamil Nadu', hi: 'तमिलनाडु' },
+  'state.Telangana': { en: 'Telangana', hi: 'तेलंगाना' },
+  'state.Uttar Pradesh': { en: 'Uttar Pradesh', hi: 'उत्तर प्रदेश' },
+  'state.Uttarakhand': { en: 'Uttarakhand', hi: 'उत्तराखंड' },
+  'state.West Bengal': { en: 'West Bengal', hi: 'पश्चिम बंगाल' },
+
   'status.matching': { en: 'Reasoning about your eligibility — this can take a few seconds.', hi: 'आपकी पात्रता का विश्लेषण हो रहा है — इसमें कुछ सेकंड लग सकते हैं।' },
   'status.none': { en: 'No matching schemes found. Try adding more detail above.', hi: 'कोई मेल खाती योजना नहीं मिली। ऊपर अधिक जानकारी जोड़कर देखें।' },
   'results.heading': { en: 'schemes for you', hi: 'आपके लिए योजनाएँ' },
@@ -111,6 +147,68 @@ const DICT: Record<string, { en: string; hi: string }> = {
   'auth.registerFailed': { en: 'Registration failed. Is the API running?', hi: 'पंजीकरण विफल। क्या API चल रही है?' },
   'auth.lengthError': { en: 'Username must be 3+ chars and password 6+ chars.', hi: 'उपयोगकर्ता नाम 3+ अक्षर और पासवर्ड 6+ अक्षर का होना चाहिए।' },
 
+  // ---- Two-factor authentication ----
+  'mfa.heading': { en: 'Two-factor authentication', hi: 'दो-चरणीय सत्यापन' },
+  'mfa.explain': {
+    en: 'Add a second step to your login using a free authenticator app such as Google Authenticator or Authy. No SMS, no phone number needed.',
+    hi: 'Google Authenticator या Authy जैसे मुफ़्त ऐप से अपने लॉग इन में एक दूसरा चरण जोड़ें। न SMS, न फ़ोन नंबर चाहिए।',
+  },
+  'mfa.enableBtn': { en: 'Enable two-factor', hi: 'दो-चरणीय सत्यापन चालू करें' },
+  // Names the apps on the QR screen itself. The pre-enrolment blurb that used to
+  // be the only place they appeared is replaced by this text the moment the user
+  // clicks Enable — i.e. exactly when they need to know what to scan it with.
+  'mfa.scanExplain': {
+    en: 'Scan this QR code with a free authenticator app, then enter the 6-digit code it shows.',
+    hi: 'इस QR कोड को किसी मुफ़्त प्रमाणक ऐप से स्कैन करें, फिर उसमें दिख रहा 6-अंकों का कोड दर्ज करें।',
+  },
+  'mfa.appSuggestions': {
+    en: "Don't have one? Google Authenticator, Microsoft Authenticator, and Authy are all free. Any app that supports TOTP will work.",
+    hi: 'कोई ऐप नहीं है? Google Authenticator, Microsoft Authenticator और Authy — सभी मुफ़्त हैं। TOTP समर्थित कोई भी ऐप काम करेगा।',
+  },
+  'mfa.qrAlt': {
+    en: 'QR code for enrolling this account in your authenticator app',
+    hi: 'इस खाते को आपके प्रमाणक ऐप में जोड़ने के लिए QR कोड',
+  },
+  'mfa.manualEntry': { en: "Can't scan? Enter this key manually:", hi: 'स्कैन नहीं कर सकते? यह कुंजी हाथ से दर्ज करें:' },
+  'mfa.confirmLabel': { en: 'Code from your app', hi: 'आपके ऐप का कोड' },
+  'mfa.enableConfirm': { en: 'Verify and enable', hi: 'सत्यापित करें और चालू करें' },
+  'mfa.stateOn': { en: 'Two-factor authentication is on.', hi: 'दो-चरणीय सत्यापन चालू है।' },
+  'mfa.codesRemaining': { en: 'recovery codes remaining', hi: 'रिकवरी कोड शेष' },
+  'mfa.disableBtn': { en: 'Turn off two-factor', hi: 'दो-चरणीय सत्यापन बंद करें' },
+  'mfa.disableExplain': {
+    en: 'Confirm with your password and a current code. This removes your second factor and all recovery codes.',
+    hi: 'अपना पासवर्ड और एक मौजूदा कोड दर्ज करें। इससे आपका दूसरा चरण और सभी रिकवरी कोड हट जाएँगे।',
+  },
+  'mfa.disableConfirm': { en: 'Turn off', hi: 'बंद करें' },
+  'mfa.cancel': { en: 'Cancel', hi: 'रद्द करें' },
+  'mfa.working': { en: 'Working…', hi: 'हो रहा है…' },
+  'mfa.enabled': { en: 'Two-factor authentication enabled', hi: 'दो-चरणीय सत्यापन चालू हो गया' },
+  'mfa.disabled': { en: 'Two-factor authentication turned off', hi: 'दो-चरणीय सत्यापन बंद कर दिया गया' },
+
+  'mfa.recoveryTitle': { en: 'Save your recovery codes now', hi: 'अपने रिकवरी कोड अभी सहेजें' },
+  'mfa.recoveryExplain': {
+    en: 'Each code works once, and they will never be shown again. Keep them somewhere safe — they are the only way back in if you lose your phone.',
+    hi: 'हर कोड केवल एक बार चलेगा और ये दोबारा नहीं दिखाए जाएँगे। इन्हें सुरक्षित रखें — फ़ोन खोने पर यही एकमात्र रास्ता है।',
+  },
+  'mfa.copy': { en: 'Copy codes', hi: 'कोड कॉपी करें' },
+  'mfa.copied': { en: 'Recovery codes copied', hi: 'रिकवरी कोड कॉपी हो गए' },
+  'mfa.copyFailed': { en: 'Could not copy — select and copy manually', hi: 'कॉपी नहीं हुआ — चुनकर हाथ से कॉपी करें' },
+  'mfa.savedThem': { en: "I've saved them", hi: 'मैंने सहेज लिए' },
+
+  'mfa.verifyTitle': { en: 'Two-factor verification', hi: 'दो-चरणीय सत्यापन' },
+  'mfa.verifySubtitle': {
+    en: 'Enter the 6-digit code from your authenticator app.',
+    hi: 'अपने प्रमाणक ऐप का 6-अंकों का कोड दर्ज करें।',
+  },
+  'mfa.codeLabel': { en: 'Verification code', hi: 'सत्यापन कोड' },
+  'mfa.codePlaceholder': { en: '123456', hi: '123456' },
+  'mfa.verifyBtn': { en: 'Verify', hi: 'सत्यापित करें' },
+  'mfa.verifying': { en: 'Verifying…', hi: 'सत्यापित हो रहा है…' },
+  'mfa.invalidCode': { en: 'That code is not valid. Try the next one your app shows.', hi: 'यह कोड मान्य नहीं है। ऐप में दिख रहा अगला कोड आज़माएँ।' },
+  'mfa.tooManyAttempts': { en: 'Too many incorrect codes. Try again in a few minutes.', hi: 'बहुत बार ग़लत कोड। कुछ मिनट बाद पुनः प्रयास करें।' },
+  'mfa.recoveryHint': { en: 'Lost your phone? Use a recovery code instead, or', hi: 'फ़ोन खो गया? इसके बजाय रिकवरी कोड डालें, या' },
+  'mfa.startOver': { en: 'start over', hi: 'फिर से शुरू करें' },
+
   // ---- Errors & screen-reader-only text ----
   'error.generic': {
     en: 'Something went wrong. Are the API and GenAI services running?',
@@ -144,7 +242,9 @@ export class I18n {
     localStorage.setItem(KEY, next);
   }
 
-  t(key: string): string {
-    return DICT[key]?.[this.lang()] ?? key;
+  /** `fallback` is for keys built from data (option values): an untranslated
+   *  option should read as its English name, not as a raw dictionary key. */
+  t(key: string, fallback?: string): string {
+    return DICT[key]?.[this.lang()] ?? fallback ?? key;
   }
 }

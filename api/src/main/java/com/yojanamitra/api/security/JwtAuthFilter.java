@@ -41,7 +41,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                String username = jwt.extractUsername(header.substring(7));
+                // ACCESS only: an MFA_CHALLENGE token has a valid signature and the
+                // same subject, so without this constraint it would authenticate
+                // a caller who never proved the second factor.
+                String username = jwt.extractUsername(header.substring(7), TokenType.ACCESS);
                 UserDetails user = userDetailsService.loadUserByUsername(username);
                 var authentication = new UsernamePasswordAuthenticationToken(
                         user, null, user.getAuthorities());

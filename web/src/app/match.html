@@ -21,21 +21,21 @@
           <span>{{ i18n.t('form.gender') }}</span>
           <select name="gender" [(ngModel)]="form.gender">
             <option value="">{{ i18n.t('form.preferNot') }}</option>
-            @for (g of genders; track g) { <option [value]="g">{{ g | titlecase }}</option> }
+            @for (g of genders; track g) { <option [value]="g">{{ i18n.t('gender.' + g, g) }}</option> }
           </select>
         </label>
         <label>
           <span>{{ i18n.t('form.state') }}</span>
           <select name="state" [(ngModel)]="form.state">
             <option value="">{{ i18n.t('form.selectState') }}</option>
-            @for (s of states; track s) { <option [value]="s">{{ s }}</option> }
+            @for (s of states; track s) { <option [value]="s">{{ i18n.t('state.' + s, s) }}</option> }
           </select>
         </label>
         <label>
           <span>{{ i18n.t('form.category') }}</span>
           <select name="category" [(ngModel)]="form.category">
             <option value="">{{ i18n.t('form.selectCategory') }}</option>
-            @for (c of categories; track c) { <option [value]="c">{{ c }}</option> }
+            @for (c of categories; track c) { <option [value]="c">{{ i18n.t('category.' + c, c) }}</option> }
           </select>
         </label>
         <label>

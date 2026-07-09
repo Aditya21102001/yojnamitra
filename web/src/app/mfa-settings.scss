@@ -1,0 +1,74 @@
+:host { display: block; }
+
+.mfa { margin-top: 1.75rem; }
+.mfa__title { margin: 0 0 .5rem; font-size: 1.2rem; }
+
+.mfa__state { font-weight: 600; margin: 0 0 .25rem; }
+.mfa__state--on { color: var(--ok); }
+
+.mfa__form { margin-top: 1rem; }
+.mfa__actions { display: flex; gap: .6rem; margin-top: 1rem; flex-wrap: wrap; }
+
+/* The QR is decorative-with-a-purpose: the same secret is printed below it as
+   text, so a user who cannot scan (or cannot see) is never blocked. */
+.mfa__qr {
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.mfa__apps {
+  margin: -.5rem 0 0;
+  font-size: .85rem;
+  color: var(--muted-ink);
+}
+
+.mfa__manual { font-size: .9rem; margin: 0 0 .5rem; }
+.mfa__secret {
+  display: inline-block;
+  margin-top: .3rem;
+  padding: .3rem .55rem;
+  background: #f1f5f9;
+  border-radius: 6px;
+  font-size: .9rem;
+  letter-spacing: .06em;
+  /* A 32-char base32 secret must wrap rather than widen the card on a phone. */
+  overflow-wrap: anywhere;
+}
+
+.mfa__recovery {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border: 1px solid #fed7aa;
+  background: #fff7ed;
+  border-radius: 12px;
+}
+.mfa__recovery h3 { margin: 0 0 .35rem; font-size: 1rem; }
+
+.mfa__codes {
+  list-style: none;
+  padding: 0;
+  margin: .75rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .4rem;
+}
+.mfa__codes code {
+  display: block;
+  padding: .35rem .5rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: .88rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .mfa__codes { grid-template-columns: 1fr; }
+}

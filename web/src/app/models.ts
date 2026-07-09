@@ -38,9 +38,25 @@ export interface ChatResponse {
   answer: string;
 }
 
+/** `token` is null exactly when `mfaRequired` is true: the password step alone
+ *  never yields a session for an account with a second factor. */
 export interface AuthResponse {
-  token: string;
+  token: string | null;
   username: string;
+  mfaRequired: boolean;
+  mfaToken: string | null;
+}
+
+/** Enrolment material, returned once by POST /api/auth/mfa/setup. */
+export interface MfaSetup {
+  secret: string;
+  qrDataUri: string;
+  otpAuthUri: string;
+}
+
+export interface MfaStatus {
+  enabled: boolean;
+  recoveryCodesRemaining: number;
 }
 
 export interface SavedScheme {

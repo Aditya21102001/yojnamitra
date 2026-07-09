@@ -29,17 +29,26 @@ explain *why* they qualify, and tell them how to apply.
 
 | Layer        | Tech (all free / open-source)                              |
 | ------------ | ---------------------------------------------------------- |
-| Frontend     | Angular 21 + SCSS                                           |
+| Frontend     | Angular 21 (zoneless, signals) + SCSS                       |
 | API / gateway| Spring Boot 3.3, Java 17, Spring Data JPA, H2 (→ Postgres)  |
 | GenAI service| Python 3.13, FastAPI (in-memory cosine retrieval)          |
-| LLM + embeds | Ollama — `llama3.2:1b` + `nomic-embed-text` (100% local)   |
-| Auth         | Spring Security + JWT (HS256, jjwt), BCrypt passwords       |
+| LLM + embeds | Pluggable — Ollama locally, Groq + Jina in the cloud        |
+| Auth         | Spring Security + JWT (jjwt), BCrypt passwords, TOTP 2FA    |
 | Data         | Curated Indian government schemes (`ai/data/schemes.json`)  |
 
 > The chat model runs on **CPU** (`num_gpu:0` in `ai/ollama_client.py`) so it works
 > on machines with a small or no GPU; embeddings use the GPU when available.
+> A free 512 MB cloud instance can't run Ollama, so `ai/Dockerfile` switches to
+> hosted Groq + Jina via `LLM_PROVIDER` / `EMBED_PROVIDER` — see `ai/providers.py`.
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the full design and data flow.
+## Documentation
+
+| Doc | Read it for |
+| --- | ----------- |
+| [ONBOARDING.md](ONBOARDING.md) | **Start here.** Vocabulary, repo map, running it, first change |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | How the three services fit together; the auth & MFA design |
+| [FEATURES.md](FEATURES.md) | Every feature and where it lives in the code |
+| [DEPLOY.md](DEPLOY.md) | Deploying to Render / Neon |
 
 ---
 
@@ -87,24 +96,44 @@ schemes and see your dashboard.
 All endpoints are under `http://localhost:8080/api`. Browsing and matching are
 public; **saving schemes and your dashboard require a Bearer token**.
 
-| Method | Endpoint        | Auth | Purpose                                                        |
-| ------ | --------------- | ---- | ------------------------------------------------------------- |
-| POST   | `/auth/register`| —    | Create an account → `{ token, username }`                     |
-| POST   | `/auth/login`   | —    | Log in → `{ token, username }`                                |
-| GET    | `/auth/me`      | —    | Current user (from the token, if present)                     |
-| GET    | `/health`       | —    | API + GenAI + Ollama status                                   |
-| GET    | `/schemes`      | —    | The full curated scheme list                                  |
-| POST   | `/match`        | opt. | Profile → ranked, explained schemes (saved to your history if logged in) |
-| POST   | `/chat`         | —    | Ask a question about one scheme                               |
-| POST   | `/saved`        | 🔒   | Save a scheme                                                 |
-| GET    | `/saved`        | 🔒   | Your saved schemes                                            |
-| DELETE | `/saved/{id}`   | 🔒   | Remove a saved scheme                                         |
-| GET    | `/history`      | 🔒   | Your recent matches                                           |
+| Method | Endpoint            | Auth | Purpose                                                        |
+| ------ | ------------------- | ---- | ------------------------------------------------------------- |
+| POST   | `/auth/register`    | —    | Create an account → `{ token, username }`                     |
+| POST   | `/auth/login`       | —    | Log in → a session, **or** an MFA challenge (see below)       |
+| POST   | `/auth/mfa/verify`  | —    | Exchange `{ mfaToken, code }` for a session                   |
+| GET    | `/auth/me`          | —    | Current user (from the token, if present)                     |
+| GET    | `/auth/mfa/status`  | 🔒   | `{ enabled, recoveryCodesRemaining }`                         |
+| POST   | `/auth/mfa/setup`   | 🔒   | Begin enrolment → `{ secret, qrDataUri, otpAuthUri }`         |
+| POST   | `/auth/mfa/enable`  | 🔒   | Confirm a code → `{ recoveryCodes }` (shown once)             |
+| POST   | `/auth/mfa/disable` | 🔒   | Requires `{ password, code }`                                 |
+| GET    | `/health`           | —    | API + GenAI provider status                                   |
+| GET    | `/schemes`          | —    | The full curated scheme list                                  |
+| POST   | `/match`            | opt. | Profile → ranked, explained schemes (saved to your history if logged in) |
+| POST   | `/chat`             | —    | Ask a question about one scheme                               |
+| POST   | `/saved`            | 🔒   | Save a scheme                                                 |
+| GET    | `/saved`            | 🔒   | Your saved schemes                                            |
+| DELETE | `/saved/{id}`       | 🔒   | Remove a saved scheme                                         |
+| GET    | `/history`          | 🔒   | Your recent matches                                           |
 
-**Auth flow:** `register`/`login` return a 24-hour HS256 **JWT**. Send it as
-`Authorization: Bearer <token>` on 🔒 calls. The Angular app stores the token in
-`localStorage` and attaches it automatically via an HTTP interceptor; a route
-guard protects `/dashboard`.
+**Auth flow.** `register` and `login` return a 24-hour **JWT** (HMAC-SHA; the key
+length picks HS256/HS384/HS512). Send it as `Authorization: Bearer <token>` on 🔒
+calls. The Angular app stores it in `localStorage`, attaches it via an HTTP
+interceptor, and guards `/dashboard` with a route guard.
+
+**With two-factor enabled**, `login` returns no session — only a short-lived
+challenge:
+
+```jsonc
+// POST /auth/login  (MFA on)
+{ "token": null, "mfaRequired": true, "mfaToken": "eyJ…", "username": "demo" }
+
+// POST /auth/mfa/verify  { "mfaToken": "eyJ…", "code": "123456" }
+{ "token": "eyJ…", "mfaRequired": false, "mfaToken": null, "username": "demo" }
+```
+
+The challenge token carries a `typ: MFA_CHALLENGE` claim and is rejected by the
+auth filter, so it can never be used as a session token. See
+[ARCHITECTURE.md §4](ARCHITECTURE.md) for the full design.
 
 ```bash
 # register, capture the token, and save a scheme
@@ -121,9 +150,16 @@ curl -X POST localhost:8080/api/saved -H "Authorization: Bearer $TOKEN" \
 
 | Variable                  | Default            | Used by                              |
 | ------------------------- | ------------------ | ------------------------------------ |
+| `DATABASE_URL`            | —                  | API — Postgres connection string; auto-activates the postgres profile |
 | `YOJANAMITRA_JWT_SECRET`  | dev secret         | API — JWT signing key (set in prod)  |
-| `DB_ENGINE`               | `h2`               | API — set `postgres` to use Postgres |
+| `YOJANAMITRA_MFA_ENC_KEY` | dev key            | API — encrypts TOTP secrets at rest. **Rotating it invalidates every MFA enrolment** |
+| `YOJANAMITRA_AI_BASE_URL` | `http://localhost:8000` | API — where the GenAI service lives |
+| `YOJANAMITRA_CORS_ALLOWED_ORIGINS` | `http://localhost:4200` | API — comma-separated origins |
+| `DB_ENGINE`               | `h2`               | API — set `postgres` to use Postgres (when `DATABASE_URL` is unset) |
 | `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | localhost:5432/yojanamitra | API — Postgres connection |
+| `LLM_PROVIDER`            | `ollama`           | GenAI — `ollama` or `groq`           |
+| `EMBED_PROVIDER`          | `ollama`           | GenAI — `ollama`, `jina`, or `fastembed` |
+| `GROQ_API_KEY` / `JINA_API_KEY` | —            | GenAI — required by the cloud providers |
 | `CHAT_MODEL`              | `llama3.2:1b`      | GenAI — Ollama chat model            |
 | `EMBED_MODEL`             | `nomic-embed-text` | GenAI — Ollama embedding model       |
 | `OLLAMA_HOST`             | `http://localhost:11434` | GenAI                          |
@@ -183,5 +219,8 @@ verified live against Neon.
   language toggle** (AI reasons in the chosen language), an eval harness
   (`ai/eval.py`), and deploy scaffolding (Dockerfiles, [DEPLOY.md](DEPLOY.md),
   [render.yaml](render.yaml)). ✅ largely done
+- **Phase 4** — **TOTP two-factor auth** (opt-in, free, with recovery codes),
+  WCAG 2.1 AA accessibility pass, and mobile responsiveness. ✅ done
 - **Next** — live myscheme.gov.in ingestion at scale; a hosted-LLM deploy path
-  (free tiers can't run Ollama — see DEPLOY.md).
+  (free tiers can't run Ollama — see DEPLOY.md); move the MFA rate limiter out of
+  process so the API can scale past one instance.
