@@ -101,6 +101,9 @@ public; **saving schemes and your dashboard require a Bearer token**.
 | POST   | `/auth/register`    | —    | Create an account → `{ token, username }`                     |
 | POST   | `/auth/login`       | —    | Log in → a session, **or** an MFA challenge (see below)       |
 | POST   | `/auth/mfa/verify`  | —    | Exchange `{ mfaToken, code }` for a session                   |
+| POST   | `/auth/forgot`      | —    | Request a reset link. **Always `204`**, so accounts can't be enumerated |
+| GET    | `/auth/reset/precheck?token=` | — | `{ valid, mfaRequired }` — is the link alive, does it need a 2FA code |
+| POST   | `/auth/reset`       | —    | `{ token, newPassword, code? }` → `204`. Issues **no session** by design |
 | GET    | `/auth/me`          | —    | Current user (from the token, if present)                     |
 | GET    | `/auth/mfa/status`  | 🔒   | `{ enabled, recoveryCodesRemaining }`                         |
 | POST   | `/auth/mfa/setup`   | 🔒   | Begin enrolment → `{ secret, qrDataUri, otpAuthUri }`         |
@@ -155,6 +158,9 @@ curl -X POST localhost:8080/api/saved -H "Authorization: Bearer $TOKEN" \
 | `YOJANAMITRA_MFA_ENC_KEY` | dev key            | API — encrypts TOTP secrets at rest. **Rotating it invalidates every MFA enrolment** |
 | `YOJANAMITRA_AI_BASE_URL` | `http://localhost:8000` | API — where the GenAI service lives |
 | `YOJANAMITRA_CORS_ALLOWED_ORIGINS` | `http://localhost:4200` | API — comma-separated origins |
+| `YOJANAMITRA_WEB_BASE_URL` | `http://localhost:4200` | API — origin baked into password-reset links |
+| `YOJANAMITRA_MAIL_PROVIDER` | `log`            | API — `log` prints reset links to the log; `brevo` actually sends them |
+| `BREVO_API_KEY` / `YOJANAMITRA_MAIL_FROM` | — | API — required when the provider is `brevo` |
 | `DB_ENGINE`               | `h2`               | API — set `postgres` to use Postgres (when `DATABASE_URL` is unset) |
 | `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | localhost:5432/yojanamitra | API — Postgres connection |
 | `LLM_PROVIDER`            | `ollama`           | GenAI — `ollama` or `groq`           |

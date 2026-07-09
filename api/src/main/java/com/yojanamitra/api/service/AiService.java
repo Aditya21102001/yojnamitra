@@ -9,16 +9,22 @@ import com.yojanamitra.api.history.MatchHistoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Gateway to the Python GenAI service. Translates the client's camelCase DTOs
@@ -30,8 +36,16 @@ public class AiService {
 
     private static final Logger log = LoggerFactory.getLogger(AiService.class);
     private static final String DOWN_MESSAGE =
-            "The GenAI service is unavailable. Make sure it is running on the configured "
-                    + "base URL and that Ollama is up.";
+            "The AI service is starting up or temporarily unavailable. Please try again in a moment.";
+
+    /**
+     * Backoff between attempts. The AI runs on a free tier that sleeps after
+     * ~15 min idle; the first call wakes it (~15-30s) and often times out. The
+     * pauses give the container time to finish booting, so the retry lands on a
+     * now-awake service instead of failing the user. One entry per retry.
+     */
+    private static final List<Duration> RETRY_BACKOFF =
+            List.of(Duration.ofSeconds(3), Duration.ofSeconds(8));
 
     private final RestClient ai;
     private final MatchHistoryRepository history;
@@ -79,25 +93,67 @@ public class AiService {
     }
 
     private JsonNode call(String uri, Object body) {
-        try {
-            return ai.post()
-                    .uri(uri)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(body)
-                    .retrieve()
-                    .body(JsonNode.class);
-        } catch (RestClientException ex) {
-            log.warn("GenAI call to {} failed: {}", uri, ex.getMessage());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, DOWN_MESSAGE, ex);
-        }
+        return withRetry(uri, () -> ai.post()
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .body(JsonNode.class));
     }
 
     private JsonNode get(String uri) {
+        return withRetry(uri, () -> ai.get().uri(uri).retrieve().body(JsonNode.class));
+    }
+
+    /**
+     * Runs a call, retrying only failures that a sleeping/booting container
+     * produces — connection refused, read timeout, or a gateway 502/503/504.
+     * A 4xx (or any other error) means retrying is pointless, so it surfaces at
+     * once. Retries are safe here: the AI endpoints have no side effects, and
+     * match history is written only after a call returns, never on a failure.
+     */
+    private JsonNode withRetry(String uri, Supplier<JsonNode> attempt) {
+        RestClientException last = null;
+        for (int i = 0; i <= RETRY_BACKOFF.size(); i++) {
+            try {
+                return attempt.get();
+            } catch (RestClientException ex) {
+                if (!isTransient(ex)) {
+                    log.warn("GenAI call to {} failed (not retried): {}", uri, ex.getMessage());
+                    throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, DOWN_MESSAGE, ex);
+                }
+                last = ex;
+                if (i < RETRY_BACKOFF.size()) {
+                    Duration pause = RETRY_BACKOFF.get(i);
+                    log.info("GenAI {} unreachable (attempt {}/{}), retrying in {}s — likely a cold start",
+                            uri, i + 1, RETRY_BACKOFF.size() + 1, pause.toSeconds());
+                    sleep(pause);
+                }
+            }
+        }
+        log.warn("GenAI call to {} failed after {} attempts: {}",
+                uri, RETRY_BACKOFF.size() + 1, last.getMessage());
+        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, DOWN_MESSAGE, last);
+    }
+
+    /** True for the failure shapes a waking free-tier container produces. */
+    private static boolean isTransient(RestClientException ex) {
+        if (ex instanceof ResourceAccessException) {
+            return true;   // connect timeout, read timeout, connection refused
+        }
+        if (ex instanceof HttpStatusCodeException http) {
+            HttpStatusCode status = http.getStatusCode();
+            return status.value() == 502 || status.value() == 503 || status.value() == 504;
+        }
+        return false;
+    }
+
+    private static void sleep(Duration d) {
         try {
-            return ai.get().uri(uri).retrieve().body(JsonNode.class);
-        } catch (RestClientException ex) {
-            log.warn("GenAI call to {} failed: {}", uri, ex.getMessage());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, DOWN_MESSAGE, ex);
+            Thread.sleep(d.toMillis());
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, DOWN_MESSAGE, ie);
         }
     }
 

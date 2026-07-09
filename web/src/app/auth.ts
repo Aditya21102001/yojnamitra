@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { AuthResponse, MfaSetup, MfaStatus } from './models';
+import { AuthResponse, MfaSetup, MfaStatus, ResetPrecheck } from './models';
 import { environment } from '../environments/environment';
 
 const TOKEN_KEY = 'ym_token';
@@ -23,10 +23,27 @@ export class Auth {
     return this._token();
   }
 
-  register(username: string, password: string): Observable<AuthResponse> {
+  /** `email` is optional, but an account without one can never be recovered. */
+  register(username: string, password: string, email?: string): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.base}/register`, { username, password })
+      .post<AuthResponse>(`${this.base}/register`, { username, password, email: email || null })
       .pipe(tap((res) => this.setSession(res)));
+  }
+
+  // ---- forgotten password ----
+
+  /** Resolves the same way whether or not the account exists — do not branch on it. */
+  forgotPassword(usernameOrEmail: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/forgot`, { usernameOrEmail });
+  }
+
+  resetPrecheck(token: string): Observable<ResetPrecheck> {
+    return this.http.get<ResetPrecheck>(`${this.base}/reset/precheck`, { params: { token } });
+  }
+
+  /** Deliberately returns no session: the user logs in again, through MFA if enabled. */
+  resetPassword(token: string, newPassword: string, code?: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/reset`, { token, newPassword, code: code || null });
   }
 
   /**

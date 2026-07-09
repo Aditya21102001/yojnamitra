@@ -104,6 +104,39 @@ Security properties (all enforced server-side, all covered by tests):
 
 ---
 
+## 4b. Forgotten password
+
+Give an email at sign-up (optional) and you can recover the account. Enter your
+username *or* email on **Forgot your password?**, and a single-use link arrives
+by mail. Open it, choose a new password, log in.
+
+Four properties, all enforced server-side and covered by tests:
+
+- **Accounts can't be enumerated.** `/auth/forgot` returns `204` identically for
+  a real account, an unknown one, an account with no email on file, and a mail
+  provider outage. Delivery failures are swallowed for the same reason.
+- **The link is a credential.** 256 bits of `SecureRandom`, stored only as a
+  SHA-256 hash, usable once, expiring in 15 minutes. Requesting a new link
+  retires the previous one.
+- **Reset can't bypass 2FA.** An account with MFA on must supply a code. And the
+  reset endpoint issues *no session* — you log in afterwards, where MFA applies
+  again. The property holds by construction, not by a check.
+- **Old sessions die.** Changing the password stamps `passwordChangedAt`, and
+  `JwtAuthFilter` refuses every token minted before it. A stolen token cannot
+  outlive the reset meant to evict it.
+
+An account created without an email simply cannot be recovered — there is no
+channel to reach the user on. The sign-up form says so.
+
+**Email is free.** The default provider (`log`) writes the link to the
+application log — zero cost, works offline, right for dev. Set
+`YOJANAMITRA_MAIL_PROVIDER=brevo` for real delivery (300 mails/day free).
+
+*Code:* `api/.../auth/PasswordResetService.java` · `api/.../mail/` ·
+`web/src/app/forgot-password.ts` · `web/src/app/reset-password.ts`
+
+---
+
 ## 5. Hindi / English
 
 A toggle in the navbar switches the entire interface between English and हिंदी,

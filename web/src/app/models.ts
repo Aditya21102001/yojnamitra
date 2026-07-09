@@ -59,6 +59,12 @@ export interface MfaStatus {
   recoveryCodesRemaining: number;
 }
 
+/** Result of GET /api/auth/reset/precheck — drives whether the page asks for a 2FA code. */
+export interface ResetPrecheck {
+  valid: boolean;
+  mfaRequired: boolean;
+}
+
 export interface SavedScheme {
   id: number;
   schemeId: string;

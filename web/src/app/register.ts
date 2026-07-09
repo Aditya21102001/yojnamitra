@@ -16,6 +16,7 @@ export class Register {
 
   username = '';
   password = '';
+  email = '';
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -26,7 +27,7 @@ export class Register {
     }
     this.loading.set(true);
     this.error.set(null);
-    this.auth.register(this.username.trim(), this.password).subscribe({
+    this.auth.register(this.username.trim(), this.password, this.email.trim() || undefined).subscribe({
       next: () => this.router.navigateByUrl('/dashboard'),
       error: (err) => {
         this.error.set(this.message(err));

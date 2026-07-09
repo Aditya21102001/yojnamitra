@@ -146,6 +146,52 @@ const DICT: Record<string, { en: string; hi: string }> = {
   'auth.taken': { en: 'That username is already taken', hi: 'यह उपयोगकर्ता नाम पहले से लिया जा चुका है' },
   'auth.registerFailed': { en: 'Registration failed. Is the API running?', hi: 'पंजीकरण विफल। क्या API चल रही है?' },
   'auth.lengthError': { en: 'Username must be 3+ chars and password 6+ chars.', hi: 'उपयोगकर्ता नाम 3+ अक्षर और पासवर्ड 6+ अक्षर का होना चाहिए।' },
+  'auth.forgotPassword': { en: 'Forgot your password?', hi: 'पासवर्ड भूल गए?' },
+  'auth.email': { en: 'Email (optional)', hi: 'ईमेल (वैकल्पिक)' },
+  'auth.emailPlaceholder': { en: 'you@example.com', hi: 'you@example.com' },
+  'auth.emailHint': {
+    en: 'Needed to reset your password if you forget it. Without it, the account cannot be recovered.',
+    hi: 'पासवर्ड भूलने पर उसे रीसेट करने के लिए आवश्यक। इसके बिना खाता पुनर्प्राप्त नहीं किया जा सकता।',
+  },
+  'auth.emailInvalid': { en: 'Enter a valid email address.', hi: 'एक मान्य ईमेल पता दर्ज करें।' },
+
+  // ---- Forgot password ----
+  'forgot.title': { en: 'Reset your password', hi: 'अपना पासवर्ड रीसेट करें' },
+  'forgot.subtitle': {
+    en: 'Enter your username or email. If an account exists, we\'ll send a reset link.',
+    hi: 'अपना उपयोगकर्ता नाम या ईमेल दर्ज करें। यदि खाता मौजूद है, तो हम एक रीसेट लिंक भेजेंगे।',
+  },
+  'forgot.identifier': { en: 'Username or email', hi: 'उपयोगकर्ता नाम या ईमेल' },
+  'forgot.submit': { en: 'Send reset link', hi: 'रीसेट लिंक भेजें' },
+  'forgot.sending': { en: 'Sending…', hi: 'भेजा जा रहा है…' },
+  'forgot.sent': {
+    en: 'If an account matches, a reset link is on its way. Check your email — the link expires in 15 minutes.',
+    hi: 'यदि कोई खाता मेल खाता है, तो रीसेट लिंक भेजा जा रहा है। अपना ईमेल देखें — लिंक 15 मिनट में समाप्त हो जाता है।',
+  },
+  'forgot.backToLogin': { en: 'Back to log in', hi: 'लॉग इन पर वापस जाएँ' },
+
+  // ---- Reset password ----
+  'reset.title': { en: 'Choose a new password', hi: 'नया पासवर्ड चुनें' },
+  'reset.subtitle': { en: 'Enter a new password for your account.', hi: 'अपने खाते के लिए नया पासवर्ड दर्ज करें।' },
+  'reset.checking': { en: 'Checking your link…', hi: 'आपका लिंक जाँचा जा रहा है…' },
+  'reset.newPassword': { en: 'New password', hi: 'नया पासवर्ड' },
+  'reset.mfaCode': { en: 'Authenticator code', hi: 'प्रमाणक कोड' },
+  'reset.mfaHint': {
+    en: 'This account uses two-factor authentication — enter a current code to continue.',
+    hi: 'यह खाता दो-चरणीय सत्यापन का उपयोग करता है — जारी रखने के लिए एक मौजूदा कोड दर्ज करें।',
+  },
+  'reset.submit': { en: 'Set new password', hi: 'नया पासवर्ड सेट करें' },
+  'reset.saving': { en: 'Saving…', hi: 'सहेजा जा रहा है…' },
+  'reset.done': {
+    en: 'Your password has been changed. Log in with your new password.',
+    hi: 'आपका पासवर्ड बदल दिया गया है। अपने नए पासवर्ड से लॉग इन करें।',
+  },
+  'reset.goToLogin': { en: 'Go to log in', hi: 'लॉग इन पर जाएँ' },
+  'reset.linkDead': {
+    en: 'This reset link is invalid or has expired. Request a new one.',
+    hi: 'यह रीसेट लिंक अमान्य है या समाप्त हो गया है। एक नया अनुरोध करें।',
+  },
+  'reset.requestNew': { en: 'Request a new link', hi: 'नया लिंक अनुरोध करें' },
 
   // ---- Two-factor authentication ----
   'mfa.heading': { en: 'Two-factor authentication', hi: 'दो-चरणीय सत्यापन' },

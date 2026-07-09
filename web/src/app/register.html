@@ -24,6 +24,19 @@
           <small class="field-error" id="register-password-error">{{ i18n.t('auth.passwordMin') }}</small>
         }
       </label>
+      <label class="full">
+        <span>{{ i18n.t('auth.email') }}</span>
+        <input type="email" name="email" [(ngModel)]="email" #e="ngModel" email
+          autocomplete="email" [placeholder]="i18n.t('auth.emailPlaceholder')"
+          [attr.aria-invalid]="e.touched && e.invalid ? 'true' : null"
+          [attr.aria-describedby]="'register-email-hint' + (e.touched && e.invalid ? ' register-email-error' : '')" />
+        <small class="field-error" id="register-email-hint" style="color: var(--muted-ink)">
+          {{ i18n.t('auth.emailHint') }}
+        </small>
+        @if (e.touched && e.invalid) {
+          <small class="field-error" id="register-email-error">{{ i18n.t('auth.emailInvalid') }}</small>
+        }
+      </label>
 
       @if (error(); as err) { <div class="status status--error" role="alert">{{ err }}</div> }
 

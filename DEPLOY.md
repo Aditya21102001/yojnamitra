@@ -37,11 +37,50 @@ LLM_PROVIDER=groq EMBED_PROVIDER=jina GROQ_API_KEY=... JINA_API_KEY=... \
 3. Fill the secrets Render prompts for:
    - on **yojanamitra-ai**: `GROQ_API_KEY`, `JINA_API_KEY`
    - on **yojanamitra-api**: `YOJANAMITRA_AI_BASE_URL` = the ai service URL,
-     `YOJANAMITRA_CORS_ALLOWED_ORIGINS` = the web URL
-     (`DATABASE_URL` and the JWT secret are wired automatically.)
+     `YOJANAMITRA_CORS_ALLOWED_ORIGINS` = the web URL,
+     `YOJANAMITRA_WEB_BASE_URL` = the web URL (used to build reset links)
+     (`DATABASE_URL`, the JWT secret and the MFA encryption key are wired automatically.)
 4. Point the web app at the API: set `apiBase` in
    `web/src/environments/environment.prod.ts` to `https://<api>.onrender.com/api`,
    commit, and Render rebuilds the static site.
+
+### 2a. Confirm you are actually on Postgres
+
+The single most common misconfiguration. If `DATABASE_URL` is unset the API
+**silently falls back to in-memory H2** and every user, password, MFA enrolment
+and reset token is wiped on each restart or idle spin-down. On boot the api log
+must contain:
+
+```
+[YojanaMitra] DATABASE_URL detected -> jdbc:postgresql://…
+```
+
+No line, no database. Note that **Render's free Postgres is deleted after 30
+days** — for something durable, delete the `databases:` block from `render.yaml`,
+switch `DATABASE_URL` to `sync: false`, and paste a Neon connection string
+(free tier, permanent) into the dashboard.
+
+### 2b. Email for password reset
+
+`yojanamitra.mail.provider` defaults to **`log`**: nothing is emailed and the
+reset link is printed into the api service's logs. That is fine for a demo, but
+it means password reset does not work for real users, and anyone who can read
+the logs can seize an account.
+
+For real delivery, set on **yojanamitra-api**:
+
+| Variable | Value |
+| -------- | ----- |
+| `YOJANAMITRA_MAIL_PROVIDER` | `brevo` |
+| `BREVO_API_KEY` | from brevo.com → SMTP & API → API keys (free: 300 mails/day) |
+| `YOJANAMITRA_MAIL_FROM` | a sender address you have **verified** in Brevo |
+
+Brevo rather than Resend because its free tier delivers to any recipient once a
+single sender is verified, whereas Resend's free tier requires a domain you own.
+The HTTP API is used rather than SMTP because Render blocks outbound SMTP ports.
+
+> `BrevoEmailSender` fails fast at startup if `YOJANAMITRA_MAIL_PROVIDER=brevo`
+> but `BREVO_API_KEY` is empty — so set both, or neither.
 
 > Render service URLs are predictable — `https://<name>.onrender.com` — so if the
 > names aren't taken you can fill all three URLs up front:
