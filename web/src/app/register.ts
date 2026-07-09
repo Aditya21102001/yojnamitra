@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from './auth';
+import { I18n } from './i18n';
 
 @Component({
   selector: 'app-register',
@@ -11,6 +12,7 @@ import { Auth } from './auth';
 export class Register {
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
+  readonly i18n = inject(I18n);
 
   username = '';
   password = '';
@@ -19,7 +21,7 @@ export class Register {
 
   submit(): void {
     if (this.username.trim().length < 3 || this.password.length < 6) {
-      this.error.set('Username must be 3+ chars and password 6+ chars.');
+      this.error.set(this.i18n.t('auth.lengthError'));
       return;
     }
     this.loading.set(true);
@@ -38,7 +40,7 @@ export class Register {
     return (
       e?.error?.message ||
       e?.error?.detail ||
-      (e?.status === 409 ? 'That username is already taken' : 'Registration failed. Is the API running?')
+      this.i18n.t(e?.status === 409 ? 'auth.taken' : 'auth.registerFailed')
     );
   }
 }

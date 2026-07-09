@@ -24,13 +24,13 @@
   flex-wrap: wrap;
 }
 .results__head h2 { margin: 0; font-size: 1.3rem; }
-.save-hint { font-size: .82rem; color: #6b7280; }
+.save-hint { font-size: .82rem; color: var(--muted-ink); }
 
 .scheme { margin-bottom: 1rem; transition: box-shadow .15s, border-color .15s; }
 .scheme--open { border-color: var(--brand); box-shadow: 0 10px 30px rgba(29, 78, 216, .12); }
 .scheme__head { margin-bottom: .35rem; display: flex; gap: .4rem; flex-wrap: wrap; }
 .scheme h3 { margin: .1rem 0; font-size: 1.15rem; }
-.ministry { margin: 0 0 .6rem; color: #6b7280; font-size: .85rem; }
+.ministry { margin: 0 0 .6rem; color: var(--muted-ink); font-size: .85rem; }
 .reason { margin: 0 0 .75rem; }
 .scheme__benefit, .scheme__apply { font-size: .92rem; margin-bottom: .4rem; }
 .scheme__benefit strong, .scheme__apply strong { color: #374151; }
@@ -40,8 +40,11 @@
 
 /* ---------- Inline chat ---------- */
 .chat { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--line); }
-.chat__row { display: flex; gap: .5rem; }
-.chat__row input { flex: 1; }
+.chat__row { display: flex; gap: .5rem; flex-wrap: wrap; }
+/* Let the field shrink, then drop the button to its own line rather than
+   pushing the card wider than a phone screen. */
+.chat__row input { flex: 1 1 12rem; min-width: 0; }
+.chat__row .btn { flex: 0 0 auto; }
 .chat__answer {
   margin: .85rem 0 0;
   background: #f8fafc;
@@ -56,7 +59,14 @@
 .footer {
   text-align: center;
   padding: 1.5rem 1.25rem 2.5rem;
-  color: #9ca3af;
+  /* Was #9ca3af — only 2.35:1 against the page background, well under AA. */
+  color: var(--muted-ink);
   font-size: .82rem;
 }
 .footer p { max-width: 60ch; margin: 0 auto; }
+
+@media (max-width: 480px) {
+  .hero { padding: 2rem 1rem 1.75rem; }
+  .hero p { font-size: 1rem; }
+  .chat__row .btn { width: 100%; }
+}

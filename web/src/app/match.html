@@ -5,7 +5,7 @@
   </div>
 </header>
 
-<main class="container">
+<main class="container" id="main-content" tabindex="-1">
   <section class="card">
     <h2 class="section-title">{{ i18n.t('form.title') }}</h2>
     <p class="muted">{{ i18n.t('form.subtitle') }}</p>
@@ -14,7 +14,8 @@
       <div class="grid">
         <label>
           <span>{{ i18n.t('form.age') }}</span>
-          <input type="number" name="age" [(ngModel)]="form.age" min="0" max="120" placeholder="e.g. 26" />
+          <input type="number" name="age" [(ngModel)]="form.age" min="0" max="120"
+            inputmode="numeric" [placeholder]="i18n.t('form.agePlaceholder')" />
         </label>
         <label>
           <span>{{ i18n.t('form.gender') }}</span>
@@ -39,18 +40,20 @@
         </label>
         <label>
           <span>{{ i18n.t('form.occupation') }}</span>
-          <input type="text" name="occupation" [(ngModel)]="form.occupation" placeholder="e.g. small farmer, student" />
+          <input type="text" name="occupation" [(ngModel)]="form.occupation"
+            [placeholder]="i18n.t('form.occupationPlaceholder')" />
         </label>
         <label>
           <span>{{ i18n.t('form.income') }}</span>
-          <input type="number" name="annualIncome" [(ngModel)]="form.annualIncome" min="0" placeholder="e.g. 90000" />
+          <input type="number" name="annualIncome" [(ngModel)]="form.annualIncome" min="0"
+            inputmode="numeric" [placeholder]="i18n.t('form.incomePlaceholder')" />
         </label>
       </div>
 
       <label class="full">
         <span>{{ i18n.t('form.about') }}</span>
         <textarea name="description" [(ngModel)]="form.description" rows="2"
-          placeholder="e.g. I want to start a small tailoring business and need a collateral-free loan"></textarea>
+          [placeholder]="i18n.t('form.aboutPlaceholder')"></textarea>
       </label>
 
       <button type="submit" class="btn btn--block" [disabled]="loading()">
@@ -60,8 +63,8 @@
   </section>
 
   @if (loading()) {
-    <div class="status">🔎 {{ i18n.t('status.matching') }}</div>
-    <div class="results">
+    <div class="status" role="status"><span aria-hidden="true">🔎</span> {{ i18n.t('status.matching') }}</div>
+    <div class="results" aria-hidden="true">
       @for (i of [1, 2, 3]; track i) {
         <div class="card skeleton-card">
           <div class="skeleton skeleton-line"></div>
@@ -72,30 +75,31 @@
     </div>
   }
   @if (error(); as err) {
-    <div class="status status--error">⚠️ {{ err }}</div>
+    <div class="status status--error" role="alert"><span aria-hidden="true">⚠️</span> {{ err }}</div>
   }
 
   @if (result(); as res) {
     @if (res.count === 0) {
-      <div class="status">{{ i18n.t('status.none') }}</div>
+      <div class="status" role="status">{{ i18n.t('status.none') }}</div>
     } @else {
-      <section class="results">
+      <section class="results" aria-labelledby="results-heading">
         <div class="results__head">
-          <h2>{{ res.count }} {{ i18n.t('results.heading') }}</h2>
+          <h2 id="results-heading">{{ res.count }} {{ i18n.t('results.heading') }}</h2>
           @if (!auth.isLoggedIn()) {
             <span class="save-hint">{{ i18n.t('results.saveHint') }}</span>
           }
         </div>
 
         @for (s of res.schemes; track s.id) {
-          <article class="card scheme" [class.scheme--open]="expandedId() === s.id">
+          <article class="card scheme" [class.scheme--open]="expandedId() === s.id"
+            [attr.aria-labelledby]="'scheme-' + s.id">
             <div class="scheme__head">
               <span class="badge badge--{{ s.verdict }}">{{ verdictLabel(s.verdict) }}</span>
               <span class="chip">{{ s.category }}</span>
-              <span class="chip chip--score">match {{ (s.score * 100) | number:'1.0-0' }}%</span>
+              <span class="chip chip--score">{{ i18n.t('scheme.matchScore') }} {{ (s.score * 100) | number:'1.0-0' }}%</span>
             </div>
 
-            <h3>{{ s.name }}</h3>
+            <h3 [id]="'scheme-' + s.id">{{ s.name }}</h3>
             <p class="ministry">{{ s.ministry }}</p>
             <p class="reason">{{ s.reason }}</p>
 
@@ -103,30 +107,45 @@
             <div class="scheme__apply"><strong>{{ i18n.t('scheme.apply') }}</strong> {{ s.how_to_apply }}</div>
 
             <div class="scheme__actions">
-              <a class="btn--ghost" [href]="s.apply_url" target="_blank" rel="noopener">{{ i18n.t('scheme.official') }}</a>
-              <button class="btn--ghost" type="button" (click)="toggle(s)">
+              <a class="btn--ghost" [href]="s.apply_url" target="_blank" rel="noopener">
+                {{ i18n.t('scheme.official') }}<span aria-hidden="true">↗</span>
+                <span class="sr-only">{{ i18n.t('a11y.newTab') }}</span>
+              </a>
+              <button class="btn--ghost" type="button" (click)="toggle(s)"
+                [attr.aria-expanded]="expandedId() === s.id" [attr.aria-controls]="'chat-' + s.id">
                 @if (expandedId() === s.id) { {{ i18n.t('scheme.close') }} } @else { {{ i18n.t('scheme.ask') }} }
               </button>
               @if (auth.isLoggedIn()) {
                 <button class="btn--ghost save-btn" type="button" (click)="save(s)"
                   [disabled]="isSaved(s.id) || savingId() === s.id" [class.is-saved]="isSaved(s.id)">
-                  @if (isSaved(s.id)) { {{ i18n.t('scheme.saved') }} }
-                  @else if (savingId() === s.id) { {{ i18n.t('scheme.saving') }} }
-                  @else { {{ i18n.t('scheme.save') }} }
+                  @if (isSaved(s.id)) {
+                    <span aria-hidden="true">✓</span> {{ i18n.t('scheme.saved') }}
+                  } @else if (savingId() === s.id) {
+                    {{ i18n.t('scheme.saving') }}
+                  } @else {
+                    <span aria-hidden="true">☆</span> {{ i18n.t('scheme.save') }}
+                  }
                 </button>
               }
             </div>
 
             @if (expandedId() === s.id) {
-              <div class="chat">
+              <div class="chat" [id]="'chat-' + s.id">
                 <div class="chat__row">
                   <input type="text" [(ngModel)]="chatQuestion" [name]="'q-' + s.id"
+                    [attr.aria-label]="i18n.t('scheme.qlabel')"
                     [placeholder]="i18n.t('scheme.qplaceholder')" (keyup.enter)="ask(s)" />
                   <button class="btn" type="button" (click)="ask(s)" [disabled]="chatLoading()">
-                    @if (chatLoading()) { … } @else { {{ i18n.t('scheme.askBtn') }} }
+                    @if (chatLoading()) {
+                      <span aria-hidden="true">…</span><span class="sr-only">{{ i18n.t('a11y.loading') }}</span>
+                    } @else {
+                      {{ i18n.t('scheme.askBtn') }}
+                    }
                   </button>
                 </div>
-                @if (chatAnswer(); as ans) { <p class="chat__answer">{{ ans }}</p> }
+                <div role="status" aria-live="polite">
+                  @if (chatAnswer(); as ans) { <p class="chat__answer">{{ ans }}</p> }
+                </div>
               </div>
             }
           </article>

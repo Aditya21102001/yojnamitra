@@ -1,29 +1,39 @@
-<div class="auth-wrap">
+<main class="auth-wrap" id="main-content" tabindex="-1">
   <div class="card auth-card">
-    <h1>Create your account</h1>
-    <p class="muted">Sign up to save schemes and keep a dashboard.</p>
+    <h1>{{ i18n.t('auth.registerTitle') }}</h1>
+    <p class="muted">{{ i18n.t('auth.registerSubtitle') }}</p>
 
     <form (ngSubmit)="submit()" #f="ngForm">
       <label class="full">
-        <span>Username</span>
+        <span>{{ i18n.t('auth.username') }}</span>
         <input name="username" [(ngModel)]="username" #u="ngModel" required minlength="3"
-          autocomplete="username" placeholder="at least 3 characters" />
-        @if (u.touched && u.invalid) { <small class="field-error">Username must be at least 3 characters.</small> }
+          autocomplete="username" [placeholder]="i18n.t('auth.usernamePlaceholder')"
+          [attr.aria-invalid]="u.touched && u.invalid ? 'true' : null"
+          [attr.aria-describedby]="u.touched && u.invalid ? 'register-username-error' : null" />
+        @if (u.touched && u.invalid) {
+          <small class="field-error" id="register-username-error">{{ i18n.t('auth.usernameMin') }}</small>
+        }
       </label>
       <label class="full">
-        <span>Password</span>
+        <span>{{ i18n.t('auth.password') }}</span>
         <input type="password" name="password" [(ngModel)]="password" #p="ngModel" required minlength="6"
-          autocomplete="new-password" placeholder="at least 6 characters" />
-        @if (p.touched && p.invalid) { <small class="field-error">Password must be at least 6 characters.</small> }
+          autocomplete="new-password" [placeholder]="i18n.t('auth.passwordPlaceholder')"
+          [attr.aria-invalid]="p.touched && p.invalid ? 'true' : null"
+          [attr.aria-describedby]="p.touched && p.invalid ? 'register-password-error' : null" />
+        @if (p.touched && p.invalid) {
+          <small class="field-error" id="register-password-error">{{ i18n.t('auth.passwordMin') }}</small>
+        }
       </label>
 
-      @if (error(); as err) { <div class="status status--error">{{ err }}</div> }
+      @if (error(); as err) { <div class="status status--error" role="alert">{{ err }}</div> }
 
       <button class="btn btn--block" [disabled]="loading() || f.invalid">
-        @if (loading()) { Creating… } @else { Sign up }
+        @if (loading()) { {{ i18n.t('auth.creating') }} } @else { {{ i18n.t('nav.signup') }} }
       </button>
     </form>
 
-    <p class="auth-alt">Already have an account? <a routerLink="/login">Log in</a></p>
+    <p class="auth-alt">
+      {{ i18n.t('auth.haveAccount') }} <a routerLink="/login">{{ i18n.t('auth.loginTitle') }}</a>
+    </p>
   </div>
-</div>
+</main>

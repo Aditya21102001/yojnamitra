@@ -135,11 +135,6 @@ export class Match {
 
   private errorMessage(err: unknown): string {
     const e = err as { error?: { detail?: string; message?: string }; message?: string };
-    return (
-      e?.error?.detail ||
-      e?.error?.message ||
-      e?.message ||
-      'Something went wrong. Are the API and GenAI services running?'
-    );
+    return e?.error?.detail || e?.error?.message || e?.message || this.i18n.t('error.generic');
   }
 }

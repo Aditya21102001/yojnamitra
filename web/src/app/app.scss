@@ -24,6 +24,10 @@
   align-items: center;
   gap: 1rem;
   font-size: .92rem;
+  /* The parent wraps but this row did not, so five logged-in items (links,
+     greeting, log out, language) overflowed the viewport on a phone. */
+  flex-wrap: wrap;
+  row-gap: .5rem;
 }
 
 .navbar__links a {
@@ -45,14 +49,22 @@
 }
 .navbar__cta:hover { background: var(--brand-dark); }
 
-.navbar__user { color: #6b7280; font-size: .88rem; }
+.navbar__user {
+  color: var(--muted-ink);
+  font-size: .88rem;
+  /* A long username must not be able to push the row past the screen edge. */
+  max-width: 14ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .navbar__logout {
   background: none;
   border: 1px solid var(--line);
   border-radius: 9px;
   padding: .4rem .8rem;
-  font: inherit;
+  font-family: inherit;
   font-size: .88rem;
   font-weight: 600;
   color: #475569;
@@ -66,9 +78,24 @@
   color: var(--brand);
   border-radius: 9px;
   padding: .35rem .7rem;
-  font: inherit;
+  font-family: inherit;
   font-size: .82rem;
   font-weight: 700;
   cursor: pointer;
 }
 .navbar__lang:hover { background: #eef2ff; }
+
+@media (max-width: 620px) {
+  .navbar { padding: .6rem .9rem; gap: .5rem; }
+  .navbar__brand { font-size: 1.05rem; }
+  .navbar__links { width: 100%; gap: .75rem; }
+
+  /* 44px touch targets once the nav is being tapped rather than clicked. */
+  .navbar__links a,
+  .navbar__logout,
+  .navbar__lang {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

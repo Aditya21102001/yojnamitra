@@ -1,5 +1,7 @@
-<nav class="navbar">
-  <a class="navbar__brand" routerLink="/">🏛️ YojanaMitra</a>
+<a class="skip-link" href="#main-content">{{ i18n.t('a11y.skip') }}</a>
+
+<nav class="navbar" [attr.aria-label]="i18n.t('nav.primary')">
+  <a class="navbar__brand" routerLink="/"><span aria-hidden="true">🏛️</span> YojanaMitra</a>
   <div class="navbar__links">
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ i18n.t('nav.find') }}</a>
     @if (auth.isLoggedIn()) {
@@ -11,14 +13,22 @@
       <a routerLink="/register" routerLinkActive="active" class="navbar__cta">{{ i18n.t('nav.signup') }}</a>
     }
     <button class="navbar__lang" type="button" (click)="i18n.toggle()"
-      [title]="i18n.lang() === 'en' ? 'हिंदी में देखें' : 'View in English'">
-      {{ i18n.lang() === 'en' ? 'हिंदी' : 'EN' }}
+      [attr.aria-label]="i18n.lang() === 'en' ? i18n.t('a11y.langToHi') : i18n.t('a11y.langToEn')">
+      @if (i18n.lang() === 'en') {
+        <span lang="hi">हिंदी</span>
+      } @else {
+        <span lang="en">EN</span>
+      }
     </button>
   </div>
 </nav>
 
 <router-outlet />
 
-@if (toast.message(); as m) {
-  <div class="toast">{{ m }}</div>
-}
+<!-- The live region must already be in the DOM for assistive tech to announce
+     text that appears inside it later, so the wrapper renders unconditionally. -->
+<div role="status" aria-live="polite" aria-atomic="true">
+  @if (toast.message(); as m) {
+    <div class="toast">{{ m }}</div>
+  }
+</div>

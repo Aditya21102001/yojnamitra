@@ -1,30 +1,42 @@
-<main class="container">
-  <h1 class="dash-title">Your dashboard</h1>
-  <p class="muted">Saved schemes and recent searches for <strong>{{ auth.username() }}</strong>.</p>
+<main class="container" id="main-content" tabindex="-1">
+  <h1 class="dash-title">{{ i18n.t('dash.title') }}</h1>
+  <p class="muted">{{ i18n.t('dash.subtitle') }} <strong>{{ auth.username() }}</strong>.</p>
 
   <section>
-    <h2 class="dash-h2">⭐ Saved schemes</h2>
+    <h2 class="dash-h2"><span aria-hidden="true">⭐</span> {{ i18n.t('dash.savedHeading') }}</h2>
     @if (loading()) {
-      @for (i of [1, 2]; track i) {
-        <div class="card skeleton-card">
-          <div class="skeleton skeleton-line"></div>
-          <div class="skeleton skeleton-line"></div>
-        </div>
-      }
+      <p class="sr-only" role="status">{{ i18n.t('a11y.loading') }}</p>
+      <div aria-hidden="true">
+        @for (i of [1, 2]; track i) {
+          <div class="card skeleton-card">
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line"></div>
+          </div>
+        }
+      </div>
     } @else if (saved().length === 0) {
-      <div class="status">No saved schemes yet. Run a <a routerLink="/">match</a> and tap ☆ Save on any result.</div>
+      <div class="status">
+        {{ i18n.t('dash.emptySaved') }}
+        <a routerLink="/">{{ i18n.t('nav.find') }}</a>
+      </div>
     } @else {
       @for (s of saved(); track s.id) {
-        <article class="card saved">
+        <article class="card saved" [attr.aria-labelledby]="'saved-' + s.id">
           <div class="saved__head">
-            <span class="badge badge--{{ s.verdict }}">{{ s.verdict }}</span>
+            <span class="badge badge--{{ s.verdict }}">{{ verdictLabel(s.verdict) }}</span>
             <span class="chip">{{ s.category }}</span>
           </div>
-          <h3>{{ s.name }}</h3>
+          <h3 [id]="'saved-' + s.id">{{ s.name }}</h3>
           <p class="reason">{{ s.reason }}</p>
           <div class="saved__actions">
-            <a class="btn--ghost" [href]="s.applyUrl" target="_blank" rel="noopener">Official site ↗</a>
-            <button class="btn--ghost" type="button" (click)="remove(s)">Remove</button>
+            <a class="btn--ghost" [href]="s.applyUrl" target="_blank" rel="noopener">
+              {{ i18n.t('scheme.official') }}<span aria-hidden="true">↗</span>
+              <span class="sr-only">{{ i18n.t('a11y.newTab') }}</span>
+            </a>
+            <button class="btn--ghost" type="button" (click)="remove(s)"
+              [attr.aria-label]="i18n.t('dash.removeLabel') + ': ' + s.name">
+              {{ i18n.t('dash.remove') }}
+            </button>
           </div>
         </article>
       }
@@ -32,15 +44,18 @@
   </section>
 
   <section class="history">
-    <h2 class="dash-h2">🕘 Recent searches</h2>
+    <h2 class="dash-h2"><span aria-hidden="true">🕘</span> {{ i18n.t('dash.historyHeading') }}</h2>
     @if (history().length === 0) {
-      <p class="muted">No searches yet.</p>
+      <p class="muted">{{ i18n.t('dash.emptyHistory') }}</p>
     } @else {
       <ul class="history-list">
         @for (h of history(); track h.id) {
           <li>
-            <span class="history-q">{{ h.querySummary || '(no details given)' }}</span>
-            <span class="history-meta">{{ h.schemeCount }} match{{ h.schemeCount === 1 ? '' : 'es' }}</span>
+            <span class="history-q">{{ h.querySummary || i18n.t('dash.noDetails') }}</span>
+            <span class="history-meta">
+              {{ h.schemeCount }}
+              {{ h.schemeCount === 1 ? i18n.t('dash.matchCountOne') : i18n.t('dash.matchCount') }}
+            </span>
           </li>
         }
       </ul>

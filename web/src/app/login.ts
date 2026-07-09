@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from './auth';
+import { I18n } from './i18n';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,7 @@ import { Auth } from './auth';
 export class Login {
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
+  readonly i18n = inject(I18n);
 
   username = '';
   password = '';
@@ -37,7 +39,7 @@ export class Login {
     return (
       e?.error?.message ||
       e?.error?.detail ||
-      (e?.status === 401 ? 'Invalid username or password' : 'Login failed. Is the API running?')
+      this.i18n.t(e?.status === 401 ? 'auth.invalidCreds' : 'auth.loginFailed')
     );
   }
 }
